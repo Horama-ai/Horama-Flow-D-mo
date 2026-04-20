@@ -52,10 +52,10 @@ export function Report({ event }: ReportProps) {
       </div>
 
       {/* Event Info Card */}
-      <Card className="p-8 mb-6 border-l-4 border-l-prism-500">
+      <Card className="p-8 mb-6 border-l-4 border-l-gray-900">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-xs font-medium text-prism-600 uppercase tracking-wider mb-2">Rapport de synthèse</p>
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Rapport de synthèse</p>
             <h2 className="text-2xl font-semibold text-gray-900 mb-1">{event.name}</h2>
             <p className="text-gray-500">{event.subtitle}</p>
           </div>
@@ -102,7 +102,7 @@ export function Report({ event }: ReportProps) {
                 className="bg-white p-6 relative"
               >
                 {idx === 0 && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-16 bg-prism-500 rounded-r" />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-16 bg-gray-900 rounded-r" />
                 )}
                 <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">{metric.label}</p>
                 <div className="flex items-baseline gap-1">
@@ -112,8 +112,8 @@ export function Report({ event }: ReportProps) {
                 <div className="mt-3">
                   <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
                     <span>Objectif: {metric.target}{metric.unit}</span>
-                    <span className={isGood ? 'text-prism-600' : 'text-yellow-600'}>
-                      {isGood ? '✓ Atteint' : '⚠ À améliorer'}
+                    <span className={isGood ? 'text-gray-700' : 'text-gray-500'}>
+                      {isGood ? '✓ Atteint' : '○ À améliorer'}
                     </span>
                   </div>
                   <Progress value={metric.value} max={100} color={isGood ? 'blue' : 'auto'} />
@@ -174,11 +174,9 @@ export function Report({ event }: ReportProps) {
                   <div className="flex items-center gap-3">
                     {/* PRISM accent bar for first item */}
                     {idx === 0 && (
-                      <div className="w-1 h-10 bg-prism-500 rounded-r -ml-6 mr-2" />
+                      <div className="w-1 h-10 bg-gray-900 rounded-r -ml-6 mr-2" />
                     )}
-                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold ${
-                      zone.status === 'saturé' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
-                    }`}>
+                    <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold bg-gray-100 text-gray-700">
                       {idx + 1}
                     </span>
                     <div>
@@ -202,7 +200,7 @@ export function Report({ event }: ReportProps) {
       </div>
 
       {/* Recommendations */}
-      <Card className="p-6 border-prism-200 bg-prism-50">
+      <Card className="p-6 border-gray-200 bg-gray-50">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Recommandations</h3>
         <div className="grid grid-cols-2 gap-4">
           {recommendations.map((rec, idx) => (
@@ -213,7 +211,7 @@ export function Report({ event }: ReportProps) {
               transition={{ delay: idx * 0.1 }}
               className="flex items-start gap-3 p-4 bg-white rounded-xl"
             >
-              <span className="w-8 h-8 rounded-lg bg-prism-600 text-white text-sm font-semibold flex items-center justify-center flex-shrink-0">
+              <span className="w-8 h-8 rounded-lg bg-gray-900 text-white text-sm font-semibold flex items-center justify-center flex-shrink-0">
                 {idx + 1}
               </span>
               <div>

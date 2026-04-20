@@ -126,9 +126,9 @@ export function MetricCard({
   const [isExpanded, setIsExpanded] = useState(false);
 
   const statusColors = {
-    normal: 'border-l-prism-500',
-    warning: 'border-l-amber-500',
-    critical: 'border-l-red-500'
+    normal: 'border-l-gray-800',
+    warning: 'border-l-gray-600',
+    critical: 'border-l-gray-900'
   };
 
   const content = (
@@ -146,7 +146,7 @@ export function MetricCard({
       onClick={() => expandable && setIsExpanded(true)}
     >
       <div className="p-6">
-        <div className="text-xs font-semibold text-prism-600 uppercase tracking-wide mb-3">{label}</div>
+        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{label}</div>
         <div className="flex items-baseline gap-2">
           <span className="text-3xl lg:text-5xl font-extralight text-gray-900 tabular-nums">{value}</span>
           {unit && <span className="text-lg text-gray-400">{unit}</span>}
@@ -190,7 +190,7 @@ export function MetricCard({
             >
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div>
-                  <div className="text-xs font-semibold text-prism-600 uppercase tracking-wide">{label}</div>
+                  <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</div>
                   {description && <p className="text-sm text-gray-500 mt-1">{description}</p>}
                 </div>
                 <button
@@ -328,14 +328,15 @@ interface BadgeProps {
 }
 
 export function Badge({ children, variant = 'default', size = 'md', className = '' }: BadgeProps) {
-  const variants = {
-    default: 'bg-gray-100 text-gray-700',
-    success: 'bg-emerald-50 text-emerald-700',
-    warning: 'bg-amber-50 text-amber-700',
-    danger: 'bg-red-50 text-red-700',
-    blue: 'bg-prism-50 text-prism-700',
-    red: 'bg-red-50 text-red-700',
-    yellow: 'bg-amber-50 text-amber-700'
+  // All badges have neutral gray background with small colored dot
+  const dotColors = {
+    default: 'bg-gray-400',
+    success: 'bg-gray-900',
+    warning: 'bg-gray-600',
+    danger: 'bg-gray-900',
+    blue: 'bg-gray-900',
+    red: 'bg-gray-900',
+    yellow: 'bg-gray-600'
   };
 
   const sizes = {
@@ -344,7 +345,8 @@ export function Badge({ children, variant = 'default', size = 'md', className = 
   };
 
   return (
-    <span className={`inline-flex items-center rounded-full font-medium ${variants[variant]} ${sizes[size]} ${className}`}>
+    <span className={`inline-flex items-center gap-1.5 rounded-full font-medium bg-gray-100 text-gray-700 ${sizes[size]} ${className}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${dotColors[variant]}`} />
       {children}
     </span>
   );
@@ -417,7 +419,7 @@ export function LoadingSpinner({ className = '' }: { className?: string }) {
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-        className="w-8 h-8 border-2 border-prism-200 border-t-prism-600 rounded-full"
+        className="w-8 h-8 border-2 border-gray-200 border-t-gray-900 rounded-full"
       />
     </div>
   );
@@ -429,12 +431,12 @@ export function LoadingSpinner({ className = '' }: { className?: string }) {
 
 export function LiveIndicator({ className = '' }: { className?: string }) {
   return (
-    <div className={`inline-flex items-center gap-2 px-3 py-1.5 bg-prism-50 rounded-full ${className}`}>
+    <div className={`inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full ${className}`}>
       <span className="relative flex h-2 w-2">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-prism-500 opacity-75" />
-        <span className="relative inline-flex rounded-full h-2 w-2 bg-prism-500" />
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-500 opacity-75" />
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-900" />
       </span>
-      <span className="text-xs font-semibold text-prism-700 uppercase tracking-wide">Live</span>
+      <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Live</span>
     </div>
   );
 }
@@ -450,11 +452,12 @@ interface StatusDotProps {
 }
 
 export function StatusDot({ status, size = 'sm', showLabel = false }: StatusDotProps) {
+  // Use subtle gray tones for all statuses
   const colors = {
-    'fluide': 'bg-prism-500',
-    'modéré': 'bg-prism-400',
-    'dense': 'bg-amber-500',
-    'saturé': 'bg-red-500'
+    'fluide': 'bg-gray-400',
+    'modéré': 'bg-gray-500',
+    'dense': 'bg-gray-700',
+    'saturé': 'bg-gray-900'
   };
 
   const sizes = {
@@ -487,19 +490,18 @@ interface ProgressProps {
 export function Progress({ value, max = 100, size = 'sm', color = 'auto', showLabel = false, className = '' }: ProgressProps) {
   const percentage = Math.min(100, (value / max) * 100);
 
+  // Always use anthracite/gray color for consistency
   const getColor = () => {
     if (color !== 'auto') {
       const colors = {
-        blue: 'bg-prism-500',
-        red: 'bg-red-500',
-        yellow: 'bg-amber-500',
-        green: 'bg-emerald-500'
+        blue: 'bg-gray-800',
+        red: 'bg-gray-800',
+        yellow: 'bg-gray-800',
+        green: 'bg-gray-800'
       };
       return colors[color];
     }
-    if (percentage >= 80) return 'bg-red-500';
-    if (percentage >= 60) return 'bg-amber-500';
-    return 'bg-prism-500';
+    return 'bg-gray-800';
   };
 
   const heights = {
@@ -510,7 +512,7 @@ export function Progress({ value, max = 100, size = 'sm', color = 'auto', showLa
 
   return (
     <div className={`w-full ${className}`}>
-      <div className={`${heights[size]} bg-gray-100 rounded-full overflow-hidden`}>
+      <div className={`${heights[size]} bg-gray-200 rounded-full overflow-hidden`}>
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${percentage}%` }}
@@ -537,33 +539,28 @@ interface AlertItemProps {
 }
 
 export function AlertItem({ message, severity, zone, time, acknowledged, onAcknowledge }: AlertItemProps) {
+  // All alerts have white background with subtle gray left border
   const severityStyles = {
-    info: 'border-l-prism-500 bg-prism-50',
-    warning: 'border-l-amber-500 bg-amber-50',
-    critical: 'border-l-red-500 bg-red-50'
-  };
-
-  const textColors = {
-    info: 'text-prism-900',
-    warning: 'text-amber-900',
-    critical: 'text-red-900'
+    info: 'border-l-gray-400',
+    warning: 'border-l-gray-600',
+    critical: 'border-l-gray-900'
   };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: acknowledged ? 0.5 : 1, y: 0 }}
-      className={`p-4 border-l-4 ${severityStyles[severity]} ${acknowledged ? 'opacity-50' : ''}`}
+      className={`p-4 border-l-4 bg-white ${severityStyles[severity]} ${acknowledged ? 'opacity-50' : ''}`}
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className={`text-sm font-medium ${textColors[severity]}`}>{message}</p>
+          <p className="text-sm font-medium text-gray-900">{message}</p>
           <p className="text-xs text-gray-500 mt-1">{zone} • {time}</p>
         </div>
         {!acknowledged && onAcknowledge && (
           <button
             onClick={onAcknowledge}
-            className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 hover:bg-white/50 rounded transition-colors"
+            className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 hover:bg-gray-100 rounded transition-colors"
           >
             Acquitter
           </button>

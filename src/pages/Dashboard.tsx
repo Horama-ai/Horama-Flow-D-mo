@@ -114,7 +114,7 @@ export function Dashboard({ event }: DashboardProps) {
               <h1 className="text-3xl lg:text-5xl font-light text-gray-900 tracking-tight">{event.name}</h1>
               {event.status === 'live' && <LiveIndicator />}
             </div>
-            <p className="text-sm text-prism-600 font-medium uppercase tracking-wide">{event.subtitle}</p>
+            <p className="text-sm text-gray-500 font-medium uppercase tracking-wide">{event.subtitle}</p>
           </div>
           <div className="text-right">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Durée</p>
@@ -129,8 +129,8 @@ export function Dashboard({ event }: DashboardProps) {
           transition={{ delay: 0.1 }}
           className="grid grid-cols-2 lg:grid-cols-5 gap-px bg-gray-200 rounded-2xl overflow-hidden mb-8"
         >
-          <div className="bg-white p-4 lg:p-8 border-l-4 border-prism-500">
-            <div className="text-xs font-semibold text-prism-600 uppercase tracking-wide mb-4">Fréquentation</div>
+          <div className="bg-white p-4 lg:p-8 border-l-4 border-gray-900">
+            <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-4">Fréquentation</div>
             <div className="text-3xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
               {event.currentAttendance.toLocaleString('fr-FR')}
             </div>
@@ -144,9 +144,7 @@ export function Dashboard({ event }: DashboardProps) {
               {event.avgWaitTime}<span className="text-lg text-gray-400 ml-1">min</span>
             </div>
             {waitTimeTrend && (
-              <div className={`text-sm font-medium mt-2 ${
-                waitTimeTrend.direction === 'down' ? 'text-emerald-600' : 'text-amber-600'
-              }`}>
+              <div className="text-sm font-medium mt-2 text-gray-500">
                 {waitTimeTrend.direction === 'up' ? '↑' : '↓'} {waitTimeTrend.value}%
               </div>
             )}
@@ -163,9 +161,7 @@ export function Dashboard({ event }: DashboardProps) {
               {event.avgDensity}<span className="text-lg text-gray-400 ml-1">%</span>
             </div>
             {densityTrend && (
-              <div className={`text-sm font-medium mt-2 ${
-                densityTrend.direction === 'down' ? 'text-emerald-600' : 'text-amber-600'
-              }`}>
+              <div className="text-sm font-medium mt-2 text-gray-500">
                 {densityTrend.direction === 'up' ? '↑' : '↓'} {densityTrend.value}%
               </div>
             )}
@@ -176,9 +172,7 @@ export function Dashboard({ event }: DashboardProps) {
               {event.avgSaturation}<span className="text-lg text-gray-400 ml-1">%</span>
             </div>
             {saturationTrend && (
-              <div className={`text-sm font-medium mt-2 ${
-                saturationTrend.direction === 'down' ? 'text-emerald-600' : 'text-red-600'
-              }`}>
+              <div className="text-sm font-medium mt-2 text-gray-500">
                 {saturationTrend.direction === 'up' ? '↑' : '↓'} {saturationTrend.value}%
               </div>
             )}
@@ -302,9 +296,9 @@ export function Dashboard({ event }: DashboardProps) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 + idx * 0.03 }}
-                    className="flex items-center gap-3 px-6 py-3 hover:bg-prism-50/50 transition-colors"
+                    className="flex items-center gap-3 px-6 py-3 hover:bg-gray-50 transition-colors"
                   >
-                    <div className="w-1 h-8 bg-prism-500 rounded" />
+                    <div className="w-1 h-8 bg-gray-800 rounded" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <StatusDot status={zone.status} />
@@ -318,7 +312,7 @@ export function Dashboard({ event }: DashboardProps) {
               </div>
               {event.zones.length > 6 && (
                 <div className="px-6 py-3 border-t border-gray-100">
-                  <button className="text-sm text-prism-600 hover:text-prism-700 font-medium">
+                  <button className="text-sm text-gray-600 hover:text-gray-900 font-medium">
                     Voir les {event.zones.length - 6} autres zones →
                   </button>
                 </div>
@@ -387,11 +381,11 @@ export function Dashboard({ event }: DashboardProps) {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Zones critiques</span>
-                  <span className="text-lg font-semibold text-red-600">{criticalZones.length}</span>
+                  <span className="text-lg font-semibold text-gray-900">{criticalZones.length}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Zones denses</span>
-                  <span className="text-lg font-semibold text-amber-600">{warningZones.length}</span>
+                  <span className="text-lg font-semibold text-gray-700">{warningZones.length}</span>
                 </div>
               </div>
             </Card>

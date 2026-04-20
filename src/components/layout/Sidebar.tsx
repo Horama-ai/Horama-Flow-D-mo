@@ -62,7 +62,7 @@ export function Sidebar({
       {/* Logo */}
       <div className="p-6 border-b border-gray-100">
         <div className="font-extralight text-3xl text-gray-900 tracking-tight">HORAMA</div>
-        <div className="text-xs text-prism-600 font-medium uppercase tracking-wide mt-1">Flow by Horama</div>
+        <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">Flow by Horama</div>
       </div>
 
       {/* Account Selector */}
@@ -72,7 +72,7 @@ export function Sidebar({
             onClick={() => setIsAccountOpen(!isAccountOpen)}
             className="w-full flex items-center gap-3 px-3 py-2.5 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <div className="w-8 h-8 rounded-lg bg-prism-500 flex items-center justify-center text-white font-semibold text-xs">
+            <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center text-white font-semibold text-xs">
               {currentAccount.shortName}
             </div>
             <div className="flex-1 text-left">
@@ -98,15 +98,15 @@ export function Sidebar({
                       setIsAccountOpen(false);
                     }}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 transition-colors ${
-                      account.id === currentAccount.id ? 'bg-prism-50' : ''
+                      account.id === currentAccount.id ? 'bg-gray-100' : ''
                     }`}
                   >
-                    <div className="w-8 h-8 rounded-lg bg-prism-500 flex items-center justify-center text-white font-semibold text-xs">
+                    <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center text-white font-semibold text-xs">
                       {account.shortName}
                     </div>
                     <span className="text-sm font-medium text-gray-900">{account.name}</span>
                     {account.id === currentAccount.id && (
-                      <svg className="w-4 h-4 text-prism-500 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-4 h-4 text-gray-900 ml-auto" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     )}
@@ -129,8 +129,8 @@ export function Sidebar({
             <div className="flex items-center gap-2">
               {selectedEvent?.status === 'live' && (
                 <span className="flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-prism-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-prism-500" />
+                  <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-gray-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-900" />
                 </span>
               )}
               <p className="text-sm font-medium text-gray-900 truncate">{selectedEvent?.name || 'Sélectionner'}</p>
@@ -151,7 +151,7 @@ export function Sidebar({
               {/* Live Events */}
               {liveEvents.length > 0 && (
                 <div className="p-2">
-                  <p className="text-xs font-semibold text-prism-600 uppercase tracking-wide px-2 py-1">En direct</p>
+                  <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide px-2 py-1">En direct</p>
                   {liveEvents.map((event) => (
                     <EventButton
                       key={event.id}
@@ -223,7 +223,7 @@ export function Sidebar({
                   className={`
                     relative w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200
                     ${isActive
-                      ? 'bg-prism-50 text-prism-700'
+                      ? 'bg-gray-100 text-gray-900'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                     }
                   `}
@@ -231,16 +231,14 @@ export function Sidebar({
                   {isActive && (
                     <motion.div
                       layoutId="activeNav"
-                      className="absolute left-0 w-1 h-8 bg-prism-500 rounded-r"
+                      className="absolute left-0 w-1 h-8 bg-gray-900 rounded-r"
                       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                     />
                   )}
                   <Icon className="w-5 h-5" />
                   <span>{item.label}</span>
                   {item.id === 'alerts' && alertCount > 0 && (
-                    <span className={`ml-auto text-xs font-medium px-2 py-0.5 rounded-full ${
-                      isActive ? 'bg-prism-100 text-prism-700' : 'bg-red-50 text-red-700'
-                    }`}>
+                    <span className="ml-auto text-xs font-medium px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">
                       {alertCount}
                     </span>
                   )}
@@ -265,7 +263,7 @@ export function Sidebar({
                   className={`
                     relative w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200
                     ${isActive
-                      ? 'bg-prism-50 text-prism-700'
+                      ? 'bg-gray-100 text-gray-900'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                     }
                   `}
@@ -273,7 +271,7 @@ export function Sidebar({
                   {isActive && (
                     <motion.div
                       layoutId="activeNav"
-                      className="absolute left-0 w-1 h-8 bg-prism-500 rounded-r"
+                      className="absolute left-0 w-1 h-8 bg-gray-900 rounded-r"
                       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                     />
                   )}
@@ -321,14 +319,14 @@ function EventButton({
     <button
       onClick={onClick}
       className={`w-full p-2 text-left rounded-md transition-colors ${
-        isSelected ? 'bg-prism-50' : 'hover:bg-gray-50'
+        isSelected ? 'bg-gray-100' : 'hover:bg-gray-50'
       }`}
     >
       <div className="flex items-center gap-2">
         {event.status === 'live' && (
-          <span className="flex h-1.5 w-1.5 rounded-full bg-prism-500" />
+          <span className="flex h-1.5 w-1.5 rounded-full bg-gray-900" />
         )}
-        <p className={`text-sm truncate ${isSelected ? 'text-prism-700 font-medium' : 'text-gray-900'}`}>
+        <p className={`text-sm truncate ${isSelected ? 'text-gray-900 font-medium' : 'text-gray-900'}`}>
           {event.name}
         </p>
       </div>

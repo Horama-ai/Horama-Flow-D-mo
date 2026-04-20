@@ -29,21 +29,17 @@ export function Alerts({ event, onUpdateAlert }: AlertsProps) {
   };
 
   const getSeverityStyles = (severity: string, acknowledged: boolean) => {
-    if (acknowledged) return 'border-l-gray-300 bg-gray-50';
+    // All alerts have white background with gray left border of varying darkness
+    if (acknowledged) return 'border-l-gray-300 bg-white';
     switch (severity) {
-      case 'critical': return 'border-l-red-500 bg-red-50';
-      case 'warning': return 'border-l-yellow-500 bg-yellow-50';
-      default: return 'border-l-prism-500 bg-prism-50';
+      case 'critical': return 'border-l-gray-900 bg-white';
+      case 'warning': return 'border-l-gray-600 bg-white';
+      default: return 'border-l-gray-400 bg-white';
     }
   };
 
-  const getSeverityText = (severity: string, acknowledged: boolean) => {
-    if (acknowledged) return 'text-gray-600';
-    switch (severity) {
-      case 'critical': return 'text-red-900';
-      case 'warning': return 'text-yellow-900';
-      default: return 'text-prism-900';
-    }
+  const getSeverityText = () => {
+    return 'text-gray-900';
   };
 
   return (
@@ -54,7 +50,7 @@ export function Alerts({ event, onUpdateAlert }: AlertsProps) {
           <h1 className="text-2xl font-semibold text-gray-900">Alertes</h1>
           <p className="text-gray-500 mt-1">
             {activeCount} alerte{activeCount !== 1 ? 's' : ''} en attente
-            {criticalCount > 0 && <span className="text-red-600 font-medium"> • {criticalCount} critique{criticalCount !== 1 ? 's' : ''}</span>}
+            {criticalCount > 0 && <span className="text-gray-900 font-medium"> • {criticalCount} critique{criticalCount !== 1 ? 's' : ''}</span>}
           </p>
         </div>
         <Tabs
@@ -72,21 +68,21 @@ export function Alerts({ event, onUpdateAlert }: AlertsProps) {
       <div className="rounded-2xl overflow-hidden mb-8">
         <div className="grid grid-cols-4 gap-px bg-gray-200">
           <div className="bg-white p-6 relative">
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-red-500 rounded-r" />
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-gray-900 rounded-r" />
             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2 pl-4">Critiques</p>
-            <p className="text-4xl font-extralight text-red-600 tabular-nums pl-4">
+            <p className="text-4xl font-extralight text-gray-900 tabular-nums pl-4">
               {event.alerts.filter(a => a.severity === 'critical' && !a.acknowledged).length}
             </p>
           </div>
           <div className="bg-white p-6">
             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Attention</p>
-            <p className="text-4xl font-extralight text-yellow-600 tabular-nums">
+            <p className="text-4xl font-extralight text-gray-700 tabular-nums">
               {event.alerts.filter(a => a.severity === 'warning' && !a.acknowledged).length}
             </p>
           </div>
           <div className="bg-white p-6">
             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Info</p>
-            <p className="text-4xl font-extralight text-prism-600 tabular-nums">
+            <p className="text-4xl font-extralight text-gray-500 tabular-nums">
               {event.alerts.filter(a => a.severity === 'info' && !a.acknowledged).length}
             </p>
           </div>
@@ -127,14 +123,7 @@ export function Alerts({ event, onUpdateAlert }: AlertsProps) {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <Badge
-                          variant={
-                            alert.acknowledged ? 'default' :
-                            alert.severity === 'critical' ? 'red' :
-                            alert.severity === 'warning' ? 'yellow' : 'blue'
-                          }
-                          size="sm"
-                        >
+                        <Badge variant="default" size="sm">
                           {alert.severity === 'critical' ? 'Critique' :
                            alert.severity === 'warning' ? 'Attention' : 'Info'}
                         </Badge>
@@ -143,7 +132,7 @@ export function Alerts({ event, onUpdateAlert }: AlertsProps) {
                         )}
                       </div>
 
-                      <p className={`text-sm font-medium mb-2 ${getSeverityText(alert.severity, alert.acknowledged)}`}>
+                      <p className={`text-sm font-medium mb-2 ${getSeverityText()}`}>
                         {alert.message}
                       </p>
 

@@ -116,7 +116,7 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                   </h2>
                   <button
                     onClick={goToToday}
-                    className="text-sm text-prism-600 hover:text-prism-700 font-medium"
+                    className="text-sm text-gray-600 hover:text-gray-900 font-medium"
                   >
                     Aujourd'hui
                   </button>
@@ -160,13 +160,13 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                     transition={{ delay: idx * 0.01 }}
                     className={`
                       min-h-[100px] p-2 rounded-xl border transition-colors
-                      ${day.date ? 'bg-white border-gray-200 hover:border-prism-300' : 'bg-gray-50 border-transparent'}
-                      ${isToday(day.date) ? 'border-prism-500 border-2' : ''}
+                      ${day.date ? 'bg-white border-gray-200 hover:border-gray-400' : 'bg-gray-50 border-transparent'}
+                      ${isToday(day.date) ? 'border-gray-900 border-2' : ''}
                     `}
                   >
                     {day.date && (
                       <>
-                        <span className={`text-sm font-medium ${isToday(day.date) ? 'text-prism-600' : 'text-gray-900'}`}>
+                        <span className={`text-sm font-medium ${isToday(day.date) ? 'text-gray-900' : 'text-gray-900'}`}>
                           {day.date.getDate()}
                         </span>
                         <div className="mt-1 space-y-1">
@@ -181,7 +181,7 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                                   ${isSelected
                                     ? 'bg-gray-900 text-white font-medium'
                                     : event.status === 'live'
-                                      ? 'bg-prism-100 text-prism-700 hover:bg-prism-200'
+                                      ? 'bg-gray-200 text-gray-900 hover:bg-gray-300'
                                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                   }
                                 `}
@@ -204,11 +204,11 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
               {/* Legend */}
               <div className="flex items-center gap-6 mt-6 pt-4 border-t border-gray-100">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-prism-600" />
+                  <span className="w-3 h-3 rounded-full bg-gray-700" />
                   <span className="text-xs text-gray-500">En direct</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded bg-gray-100" />
+                  <span className="w-3 h-3 rounded bg-gray-200" />
                   <span className="text-xs text-gray-500">Événement</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -230,12 +230,12 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                       transition={{ delay: idx * 0.03 }}
                       onClick={() => onSelectEvent(event.id)}
                       className={`w-full p-4 text-left hover:bg-gray-50 transition-colors flex items-center ${
-                        isSelected ? 'bg-prism-50 border-l-4 border-l-prism-500' : ''
+                        isSelected ? 'bg-gray-100 border-l-4 border-l-gray-900' : ''
                       }`}
                     >
                       <div className="flex-1 flex items-center justify-between">
                         <div>
-                          <p className={`font-medium ${isSelected ? 'text-prism-700' : 'text-gray-900'}`}>
+                          <p className={`font-medium ${isSelected ? 'text-gray-900' : 'text-gray-900'}`}>
                             {event.name}
                           </p>
                           <p className="text-sm text-gray-500 mt-0.5">{event.subtitle}</p>
@@ -263,8 +263,8 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                 <div className="flex items-center gap-2 mb-3">
                   {selectedEvent.status === 'live' && (
                     <span className="flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-prism-500 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-prism-600" />
+                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-gray-500 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-900" />
                     </span>
                   )}
                   <Badge variant={selectedEvent.status === 'live' ? 'blue' : selectedEvent.status === 'upcoming' ? 'yellow' : 'default'}>

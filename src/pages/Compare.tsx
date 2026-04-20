@@ -81,7 +81,7 @@ export function Compare({ events }: CompareProps) {
                     onClick={() => toggleEvent(event.id)}
                     className={`w-full p-4 rounded-xl text-left transition-all border-2 ${
                       isSelected
-                        ? 'border-prism-500 bg-prism-50'
+                        ? 'border-gray-900 bg-gray-50'
                         : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300'
                     }`}
                   >
@@ -96,7 +96,7 @@ export function Compare({ events }: CompareProps) {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className={`text-sm font-medium truncate ${isSelected ? 'text-prism-700' : 'text-gray-900'}`}>
+                        <p className="text-sm font-medium truncate text-gray-900">
                           {event.name}
                         </p>
                         <p className="text-xs text-gray-500 truncate">
@@ -248,10 +248,7 @@ export function Compare({ events }: CompareProps) {
                             return (
                               <td key={event.id} className="py-4 px-4 text-center">
                                 <div>
-                                  <span className={`text-sm font-semibold ${
-                                    z?.saturation > 80 ? 'text-red-600' :
-                                    z?.saturation > 60 ? 'text-yellow-600' : 'text-gray-900'
-                                  }`}>
+                                  <span className="text-sm font-semibold text-gray-900">
                                     {z?.saturation || '-'}%
                                   </span>
                                   <p className="text-xs text-gray-400">{z?.waitTime || '-'} min</p>

@@ -20,13 +20,9 @@ export function Zones({ event }: ZonesProps) {
 
   const criticalCount = event.zones.filter(z => z.status === 'saturé' || z.status === 'dense').length;
 
-  const getStatusBg = (status: string) => {
-    switch (status) {
-      case 'saturé': return 'border-red-200 bg-red-50';
-      case 'dense': return 'border-yellow-200 bg-yellow-50';
-      case 'modéré': return 'border-gray-200 bg-gray-50';
-      default: return 'border-prism-200 bg-prism-50';
-    }
+  const getStatusBg = () => {
+    // All cards have white background with subtle gray border
+    return 'border-gray-200 bg-white';
   };
 
   return (
@@ -52,7 +48,7 @@ export function Zones({ event }: ZonesProps) {
       <div className="rounded-2xl overflow-hidden mb-8">
         <div className="grid grid-cols-4 gap-px bg-gray-200">
           <div className="bg-white p-6 relative">
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-prism-500 rounded-r" />
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-gray-900 rounded-r" />
             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2 pl-4">Densité moyenne</p>
             <p className="text-4xl font-extralight text-gray-900 tabular-nums pl-4">
               {Math.round(event.zones.reduce((acc, z) => acc + z.density, 0) / event.zones.length)}
@@ -68,13 +64,13 @@ export function Zones({ event }: ZonesProps) {
           </div>
           <div className="bg-white p-6">
             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Zones saturées</p>
-            <p className="text-4xl font-extralight text-red-600 tabular-nums">
+            <p className="text-4xl font-extralight text-gray-900 tabular-nums">
               {event.zones.filter(z => z.status === 'saturé').length}
             </p>
           </div>
           <div className="bg-white p-6">
             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Zones denses</p>
-            <p className="text-4xl font-extralight text-yellow-600 tabular-nums">
+            <p className="text-4xl font-extralight text-gray-700 tabular-nums">
               {event.zones.filter(z => z.status === 'dense').length}
             </p>
           </div>
@@ -92,7 +88,7 @@ export function Zones({ event }: ZonesProps) {
           >
             <div
               onClick={() => setSelectedZone(zone)}
-              className={`p-5 rounded-2xl border cursor-pointer transition-all hover:shadow-lg ${getStatusBg(zone.status)}`}
+              className={`p-5 rounded-2xl border cursor-pointer transition-all hover:shadow-lg hover:border-gray-300 ${getStatusBg()}`}
             >
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
@@ -100,10 +96,7 @@ export function Zones({ event }: ZonesProps) {
                   <div className="flex items-center gap-2 mb-1">
                     <StatusDot status={zone.status} size="md" />
                     <span className="text-base font-semibold text-gray-900">{zone.shortName}</span>
-                    <Badge
-                      variant={zone.status === 'saturé' ? 'red' : zone.status === 'dense' ? 'yellow' : 'blue'}
-                      size="sm"
-                    >
+                    <Badge variant="default" size="sm">
                       {zone.status}
                     </Badge>
                   </div>
@@ -168,9 +161,7 @@ export function Zones({ event }: ZonesProps) {
                       <div className="flex items-center gap-3 mb-1">
                         <StatusDot status={selectedZone.status} size="md" />
                         <h2 className="text-xl font-semibold text-gray-900">{selectedZone.shortName}</h2>
-                        <Badge
-                          variant={selectedZone.status === 'saturé' ? 'red' : selectedZone.status === 'dense' ? 'yellow' : 'blue'}
-                        >
+                        <Badge variant="default">
                           {selectedZone.status}
                         </Badge>
                       </div>
@@ -298,7 +289,7 @@ export function Zones({ event }: ZonesProps) {
                   </div>
 
                   {/* Alert Thresholds - Full Width */}
-                  <div className="p-4 bg-prism-50 rounded-xl border border-prism-100">
+                  <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
                     <h3 className="text-sm font-semibold text-gray-900 mb-3">Seuils d'alerte configurés</h3>
                     <div className="grid grid-cols-4 gap-4">
                       <div className="flex items-center justify-between">
