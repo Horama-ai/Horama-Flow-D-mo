@@ -280,7 +280,7 @@ export function Button({
   className = ''
 }: ButtonProps) {
   const variants = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-lg shadow-blue-500/25',
+    primary: 'bg-gray-900 text-white hover:bg-gray-800 focus:ring-gray-500 shadow-lg shadow-gray-900/25',
     secondary: 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-50',
     ghost: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
     danger: 'bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 shadow-lg shadow-red-500/25'
