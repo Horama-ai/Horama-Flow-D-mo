@@ -44,14 +44,14 @@ export function Dashboard({ event }: DashboardProps) {
     gradientId: string;
   }) => (
     <Card className="overflow-hidden">
-      <div className="px-5 py-4 border-b border-gray-100">
+      <div className="px-4 lg:px-5 py-3 lg:py-4 border-b border-gray-100">
         <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
         <p className="text-xs text-gray-500">{unit}</p>
       </div>
-      <div className="p-4">
-        <div className="h-40">
+      <div className="p-3 lg:p-4">
+        <div className="h-32 lg:h-40">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
+            <AreaChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
               <defs>
                 <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#0c7ff2" stopOpacity={0.12} />
@@ -62,15 +62,15 @@ export function Dashboard({ event }: DashboardProps) {
                 dataKey="time"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 10, fill: '#9ca3af' }}
+                tick={{ fontSize: 9, fill: '#9ca3af' }}
                 interval="preserveStartEnd"
                 tickMargin={8}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 10, fill: '#9ca3af' }}
-                width={35}
+                tick={{ fontSize: 9, fill: '#9ca3af' }}
+                width={30}
                 tickMargin={4}
               />
               <Tooltip
@@ -102,81 +102,81 @@ export function Dashboard({ event }: DashboardProps) {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-[1600px] mx-auto px-4 py-6 lg:px-8 lg:py-12">
+      <div className="max-w-[1600px] mx-auto px-4 py-4 lg:px-8 lg:py-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between mb-8 lg:mb-16 pb-6 lg:pb-8 border-b border-gray-200"
+          className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between mb-6 lg:mb-16 pb-4 lg:pb-8 border-b border-gray-200"
         >
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-3xl lg:text-5xl font-light text-gray-900 tracking-tight">{event.name}</h1>
+            <div className="flex items-center gap-2 lg:gap-3 mb-1 lg:mb-2">
+              <h1 className="text-2xl lg:text-5xl font-light text-gray-900 tracking-tight">{event.name}</h1>
               {event.status === 'live' && <LiveIndicator />}
             </div>
-            <p className="text-sm text-gray-500 font-medium uppercase tracking-wide">{event.subtitle}</p>
+            <p className="text-xs lg:text-sm text-gray-500 font-medium uppercase tracking-wide">{event.subtitle}</p>
           </div>
-          <div className="text-right">
+          <div className="text-left lg:text-right">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Durée</p>
-            <p className="text-2xl font-light text-gray-900">{event.duration}</p>
+            <p className="text-xl lg:text-2xl font-light text-gray-900">{event.duration}</p>
           </div>
         </motion.div>
 
-        {/* Stats Grid - PRISM seamless tile pattern */}
+        {/* Stats Grid - Mobile: 2x3, Desktop: 5 columns */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="grid grid-cols-2 lg:grid-cols-5 gap-px bg-gray-200 rounded-2xl overflow-hidden mb-8"
+          className="grid grid-cols-2 lg:grid-cols-5 gap-px bg-gray-200 rounded-2xl overflow-hidden mb-6 lg:mb-8"
         >
-          <div className="bg-white p-4 lg:p-8 border-l-4 border-gray-900">
-            <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-4">Fréquentation</div>
-            <div className="text-3xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
+          <div className="bg-white p-3 lg:p-8 border-l-4 border-gray-900">
+            <div className="text-[10px] lg:text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 lg:mb-4">Fréquentation</div>
+            <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
               {event.currentAttendance.toLocaleString('fr-FR')}
             </div>
-            <div className="text-sm text-gray-500 mt-2">
+            <div className="text-xs lg:text-sm text-gray-500 mt-1 lg:mt-2">
               {Math.round((event.currentAttendance / event.totalCapacity) * 100)}% capacité
             </div>
           </div>
-          <div className="bg-white p-4 lg:p-8">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Temps d'attente</div>
-            <div className="text-3xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
-              {event.avgWaitTime}<span className="text-lg text-gray-400 ml-1">min</span>
+          <div className="bg-white p-3 lg:p-8">
+            <div className="text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 lg:mb-4">Temps d'attente</div>
+            <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
+              {event.avgWaitTime}<span className="text-sm lg:text-lg text-gray-400 ml-1">min</span>
             </div>
             {waitTimeTrend && (
-              <div className={`text-sm font-medium mt-2 ${
+              <div className={`text-xs lg:text-sm font-medium mt-1 lg:mt-2 ${
                 waitTimeTrend.direction === 'down' ? 'text-emerald-500' : 'text-rose-400'
               }`}>
                 {waitTimeTrend.direction === 'up' ? '↑' : '↓'} {waitTimeTrend.value}%
               </div>
             )}
           </div>
-          <div className="bg-white p-4 lg:p-8">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Temps de passage</div>
-            <div className="text-3xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
-              {event.avgPassageTime}<span className="text-lg text-gray-400 ml-1">min</span>
+          <div className="bg-white p-3 lg:p-8">
+            <div className="text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 lg:mb-4">Temps passage</div>
+            <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
+              {event.avgPassageTime}<span className="text-sm lg:text-lg text-gray-400 ml-1">min</span>
             </div>
           </div>
-          <div className="bg-white p-4 lg:p-8">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Densité moyenne</div>
-            <div className="text-3xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
-              {event.avgDensity}<span className="text-lg text-gray-400 ml-1">%</span>
+          <div className="bg-white p-3 lg:p-8">
+            <div className="text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 lg:mb-4">Densité moy.</div>
+            <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
+              {event.avgDensity}<span className="text-sm lg:text-lg text-gray-400 ml-1">%</span>
             </div>
             {densityTrend && (
-              <div className={`text-sm font-medium mt-2 ${
+              <div className={`text-xs lg:text-sm font-medium mt-1 lg:mt-2 ${
                 densityTrend.direction === 'down' ? 'text-emerald-500' : 'text-amber-500'
               }`}>
                 {densityTrend.direction === 'up' ? '↑' : '↓'} {densityTrend.value}%
               </div>
             )}
           </div>
-          <div className="bg-white p-4 lg:p-8">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Saturation</div>
-            <div className="text-3xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
-              {event.avgSaturation}<span className="text-lg text-gray-400 ml-1">%</span>
+          <div className="bg-white p-3 lg:p-8 col-span-2 lg:col-span-1">
+            <div className="text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 lg:mb-4">Saturation</div>
+            <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
+              {event.avgSaturation}<span className="text-sm lg:text-lg text-gray-400 ml-1">%</span>
             </div>
             {saturationTrend && (
-              <div className={`text-sm font-medium mt-2 ${
+              <div className={`text-xs lg:text-sm font-medium mt-1 lg:mt-2 ${
                 saturationTrend.direction === 'down' ? 'text-emerald-500' : 'text-rose-400'
               }`}>
                 {saturationTrend.direction === 'up' ? '↑' : '↓'} {saturationTrend.value}%
@@ -185,12 +185,12 @@ export function Dashboard({ event }: DashboardProps) {
           </div>
         </motion.div>
 
-        {/* 4 Main KPI Charts - 2x2 Grid */}
+        {/* 4 Main KPI Charts - 2x2 Grid on mobile, 2x2 on desktop */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8"
+          className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4 mb-6 lg:mb-8"
         >
           <MetricChart
             data={event.waitTimeHistory}
@@ -219,7 +219,7 @@ export function Dashboard({ event }: DashboardProps) {
         </motion.div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
           {/* Flow Chart */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -228,12 +228,12 @@ export function Dashboard({ event }: DashboardProps) {
             className="lg:col-span-2"
           >
             <Card className="overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100">
-                <h2 className="text-lg font-semibold text-gray-900">Évolution du flux</h2>
-                <p className="text-sm text-gray-500">Flux de visiteurs sur la période</p>
+              <div className="px-4 lg:px-6 py-3 lg:py-4 border-b border-gray-100">
+                <h2 className="text-base lg:text-lg font-semibold text-gray-900">Évolution du flux</h2>
+                <p className="text-xs lg:text-sm text-gray-500">Flux de visiteurs sur la période</p>
               </div>
-              <div className="p-6">
-                <div className="h-64">
+              <div className="p-4 lg:p-6">
+                <div className="h-48 lg:h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={event.flowHistory}>
                       <defs>
@@ -246,14 +246,14 @@ export function Dashboard({ event }: DashboardProps) {
                         dataKey="time"
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fontSize: 11, fill: '#9ca3af' }}
+                        tick={{ fontSize: 10, fill: '#9ca3af' }}
                         interval="preserveStartEnd"
                       />
                       <YAxis
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fontSize: 11, fill: '#9ca3af' }}
-                        width={40}
+                        tick={{ fontSize: 10, fill: '#9ca3af' }}
+                        width={35}
                       />
                       <Tooltip
                         contentStyle={{
@@ -289,37 +289,37 @@ export function Dashboard({ event }: DashboardProps) {
             transition={{ delay: 0.3 }}
           >
             <Card className="overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-gray-900">Zones surveillées</h2>
+              <div className="px-4 lg:px-6 py-3 lg:py-4 border-b border-gray-100 flex items-center justify-between">
+                <h2 className="text-base lg:text-lg font-semibold text-gray-900">Zones surveillées</h2>
                 <Badge variant={criticalZones.length > 0 ? 'danger' : 'default'}>
                   {event.zones.length} zones
                 </Badge>
               </div>
               <div className="divide-y divide-gray-100">
-                {event.zones.slice(0, 6).map((zone, idx) => (
+                {event.zones.slice(0, 5).map((zone, idx) => (
                   <motion.div
                     key={zone.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 + idx * 0.03 }}
-                    className="flex items-center gap-3 px-6 py-3 hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 px-4 lg:px-6 py-2.5 lg:py-3 hover:bg-gray-50 transition-colors"
                   >
-                    <div className="w-1 h-8 bg-gray-800 rounded" />
+                    <div className="w-1 h-6 lg:h-8 bg-gray-800 rounded" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <StatusDot status={zone.status} />
-                        <span className="text-sm font-medium text-gray-900">{zone.shortName}</span>
+                        <span className="text-xs lg:text-sm font-medium text-gray-900 truncate">{zone.shortName}</span>
                       </div>
-                      <div className="text-xs text-gray-500">{zone.waitTime} min • {zone.cameras} cam</div>
+                      <div className="text-[10px] lg:text-xs text-gray-500">{zone.waitTime} min • {zone.cameras} cam</div>
                     </div>
-                    <span className="text-lg font-semibold text-gray-900 tabular-nums">{zone.density}%</span>
+                    <span className="text-base lg:text-lg font-semibold text-gray-900 tabular-nums">{zone.density}%</span>
                   </motion.div>
                 ))}
               </div>
-              {event.zones.length > 6 && (
-                <div className="px-6 py-3 border-t border-gray-100">
-                  <button className="text-sm text-gray-600 hover:text-gray-900 font-medium">
-                    Voir les {event.zones.length - 6} autres zones →
+              {event.zones.length > 5 && (
+                <div className="px-4 lg:px-6 py-2.5 lg:py-3 border-t border-gray-100">
+                  <button className="text-xs lg:text-sm text-gray-600 hover:text-gray-900 font-medium">
+                    Voir les {event.zones.length - 5} autres zones →
                   </button>
                 </div>
               )}
@@ -334,15 +334,15 @@ export function Dashboard({ event }: DashboardProps) {
             className="lg:col-span-2"
           >
             <Card className="overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-gray-900">Alertes actives</h2>
+              <div className="px-4 lg:px-6 py-3 lg:py-4 border-b border-gray-100 flex items-center justify-between">
+                <h2 className="text-base lg:text-lg font-semibold text-gray-900">Alertes actives</h2>
                 {activeAlerts.length > 0 && (
                   <Badge variant="danger">{activeAlerts.length} alerte{activeAlerts.length > 1 ? 's' : ''}</Badge>
                 )}
               </div>
               {activeAlerts.length === 0 ? (
-                <div className="px-4 lg:px-8 py-16 text-center">
-                  <p className="text-sm text-gray-400 font-medium uppercase tracking-wide">Aucune alerte active</p>
+                <div className="px-4 lg:px-8 py-12 lg:py-16 text-center">
+                  <p className="text-xs lg:text-sm text-gray-400 font-medium uppercase tracking-wide">Aucune alerte active</p>
                 </div>
               ) : (
                 <div className="divide-y divide-gray-100">
@@ -373,37 +373,37 @@ export function Dashboard({ event }: DashboardProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <Card className="p-6">
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Résumé</h3>
-              <div className="space-y-4">
+            <Card className="p-4 lg:p-6">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 lg:mb-4">Résumé</h3>
+              <div className="space-y-3 lg:space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Score de fluidité</span>
-                  <span className="text-lg font-semibold text-gray-900">{event.globalFluidityScore}%</span>
+                  <span className="text-xs lg:text-sm text-gray-600">Score de fluidité</span>
+                  <span className="text-base lg:text-lg font-semibold text-gray-900">{event.globalFluidityScore}%</span>
                 </div>
                 <Progress value={event.globalFluidityScore} />
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <span className="text-sm text-gray-600">Pic enregistré</span>
-                  <span className="text-lg font-semibold text-gray-900">{event.peakAttendance.toLocaleString()}</span>
+                <div className="flex items-center justify-between pt-3 lg:pt-4 border-t border-gray-100">
+                  <span className="text-xs lg:text-sm text-gray-600">Pic enregistré</span>
+                  <span className="text-base lg:text-lg font-semibold text-gray-900">{event.peakAttendance.toLocaleString()}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Zones critiques</span>
-                  <span className="text-lg font-semibold text-rose-500">{criticalZones.length}</span>
+                  <span className="text-xs lg:text-sm text-gray-600">Zones critiques</span>
+                  <span className="text-base lg:text-lg font-semibold text-rose-500">{criticalZones.length}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Zones denses</span>
-                  <span className="text-lg font-semibold text-amber-500">{warningZones.length}</span>
+                  <span className="text-xs lg:text-sm text-gray-600">Zones denses</span>
+                  <span className="text-base lg:text-lg font-semibold text-amber-500">{warningZones.length}</span>
                 </div>
               </div>
             </Card>
           </motion.div>
         </div>
 
-        {/* Footer */}
+        {/* Footer - Hidden on mobile, shown on desktop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="mt-8 pt-6 border-t border-gray-200 flex items-center justify-between"
+          className="hidden lg:flex mt-8 pt-6 border-t border-gray-200 items-center justify-between"
         >
           <div className="flex items-center gap-8 text-sm text-gray-500">
             <div>

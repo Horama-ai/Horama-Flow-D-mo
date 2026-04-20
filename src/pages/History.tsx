@@ -76,17 +76,17 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
   };
 
   return (
-    <div className="p-8 max-w-[1600px] mx-auto">
+    <div className="p-4 lg:p-8 max-w-[1600px] mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between mb-6 lg:mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Historique</h1>
-          <p className="text-gray-500 mt-1">{completedEvents.length} événements passés</p>
+          <h1 className="text-xl lg:text-2xl font-semibold text-gray-900">Historique</h1>
+          <p className="text-sm text-gray-500 mt-1">{completedEvents.length} événements passés</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setViewMode('calendar')}
-            className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+            className={`px-3 lg:px-4 py-2 text-xs lg:text-sm font-medium rounded-full transition-colors ${
               viewMode === 'calendar' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
@@ -94,7 +94,7 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
           </button>
           <button
             onClick={() => setViewMode('list')}
-            className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+            className={`px-3 lg:px-4 py-2 text-xs lg:text-sm font-medium rounded-full transition-colors ${
               viewMode === 'list' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
@@ -103,38 +103,38 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         {/* Calendar / List View */}
-        <div className="col-span-2">
+        <div className="lg:col-span-2 order-2 lg:order-1">
           {viewMode === 'calendar' ? (
-            <Card className="p-6">
+            <Card className="p-3 lg:p-6">
               {/* Calendar Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4">
-                  <h2 className="text-xl font-semibold text-gray-900">
+              <div className="flex items-center justify-between mb-4 lg:mb-6">
+                <div className="flex items-center gap-2 lg:gap-4">
+                  <h2 className="text-base lg:text-xl font-semibold text-gray-900">
                     {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
                   </h2>
                   <button
                     onClick={goToToday}
-                    className="text-sm text-gray-600 hover:text-gray-900 font-medium"
+                    className="text-xs lg:text-sm text-gray-600 hover:text-gray-900 font-medium"
                   >
-                    Aujourd'hui
+                    Auj.
                   </button>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 lg:gap-2">
                   <button
                     onClick={() => navigateMonth('prev')}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="p-1.5 lg:p-2 hover:bg-gray-100 rounded-lg transition-colors"
                   >
-                    <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
                   </button>
                   <button
                     onClick={() => navigateMonth('next')}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="p-1.5 lg:p-2 hover:bg-gray-100 rounded-lg transition-colors"
                   >
-                    <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
@@ -142,16 +142,17 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
               </div>
 
               {/* Day Headers */}
-              <div className="grid grid-cols-7 gap-1 mb-2">
+              <div className="grid grid-cols-7 gap-0.5 lg:gap-1 mb-1 lg:mb-2">
                 {dayNames.map(day => (
-                  <div key={day} className="text-center text-xs font-medium text-gray-500 uppercase tracking-wide py-2">
-                    {day}
+                  <div key={day} className="text-center text-[10px] lg:text-xs font-medium text-gray-500 uppercase tracking-wide py-1 lg:py-2">
+                    {day.charAt(0)}
+                    <span className="hidden lg:inline">{day.slice(1)}</span>
                   </div>
                 ))}
               </div>
 
               {/* Calendar Grid */}
-              <div className="grid grid-cols-7 gap-1">
+              <div className="grid grid-cols-7 gap-0.5 lg:gap-1">
                 {calendarData.map((day, idx) => (
                   <motion.div
                     key={idx}
@@ -159,17 +160,17 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                     animate={{ opacity: 1 }}
                     transition={{ delay: idx * 0.01 }}
                     className={`
-                      min-h-[100px] p-2 rounded-xl border transition-colors
+                      min-h-[48px] lg:min-h-[100px] p-1 lg:p-2 rounded-lg lg:rounded-xl border transition-colors
                       ${day.date ? 'bg-white border-gray-200 hover:border-gray-400' : 'bg-gray-50 border-transparent'}
                       ${isToday(day.date) ? 'border-gray-900 border-2' : ''}
                     `}
                   >
                     {day.date && (
                       <>
-                        <span className={`text-sm font-medium ${isToday(day.date) ? 'text-gray-900' : 'text-gray-900'}`}>
+                        <span className={`text-xs lg:text-sm font-medium ${isToday(day.date) ? 'text-gray-900' : 'text-gray-900'}`}>
                           {day.date.getDate()}
                         </span>
-                        <div className="mt-1 space-y-1">
+                        <div className="mt-0.5 lg:mt-1 space-y-0.5 lg:space-y-1">
                           {day.events.slice(0, 2).map(event => {
                             const isSelected = event.id === selectedEventId;
                             return (
@@ -177,7 +178,7 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                                 key={event.id}
                                 onClick={() => onSelectEvent(event.id)}
                                 className={`
-                                  w-full text-left px-1.5 py-1 text-xs rounded-md truncate transition-all
+                                  w-full text-left px-1 lg:px-1.5 py-0.5 lg:py-1 text-[9px] lg:text-xs rounded-md truncate transition-all
                                   ${isSelected
                                     ? 'bg-gray-900 text-white font-medium'
                                     : event.status === 'live'
@@ -186,13 +187,13 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                                   }
                                 `}
                               >
-                                {event.status === 'live' && '● '}
-                                {event.name}
+                                <span className="hidden lg:inline">{event.status === 'live' && '● '}{event.name}</span>
+                                <span className="lg:hidden">{event.status === 'live' ? '●' : '•'}</span>
                               </button>
                             );
                           })}
                           {day.events.length > 2 && (
-                            <span className="text-xs text-gray-400">+{day.events.length - 2} autres</span>
+                            <span className="text-[9px] lg:text-xs text-gray-400 hidden lg:block">+{day.events.length - 2}</span>
                           )}
                         </div>
                       </>
@@ -202,7 +203,7 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
               </div>
 
               {/* Legend */}
-              <div className="flex items-center gap-6 mt-6 pt-4 border-t border-gray-100">
+              <div className="hidden lg:flex items-center gap-6 mt-6 pt-4 border-t border-gray-100">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-gray-700" />
                   <span className="text-xs text-gray-500">En direct</span>
@@ -229,22 +230,22 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.03 }}
                       onClick={() => onSelectEvent(event.id)}
-                      className={`w-full p-4 text-left hover:bg-gray-50 transition-colors flex items-center ${
+                      className={`w-full p-3 lg:p-4 text-left hover:bg-gray-50 transition-colors flex items-center ${
                         isSelected ? 'bg-gray-100 border-l-4 border-l-gray-900' : ''
                       }`}
                     >
-                      <div className="flex-1 flex items-center justify-between">
+                      <div className="flex-1 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-1 lg:gap-0">
                         <div>
-                          <p className={`font-medium ${isSelected ? 'text-gray-900' : 'text-gray-900'}`}>
+                          <p className={`text-sm lg:text-base font-medium ${isSelected ? 'text-gray-900' : 'text-gray-900'}`}>
                             {event.name}
                           </p>
-                          <p className="text-sm text-gray-500 mt-0.5">{event.subtitle}</p>
+                          <p className="text-xs lg:text-sm text-gray-500 mt-0.5">{event.subtitle}</p>
                         </div>
-                        <div className="text-right">
-                          <p className="text-sm font-medium text-gray-900">
-                            {event.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        <div className="lg:text-right">
+                          <p className="text-xs lg:text-sm font-medium text-gray-900">
+                            {event.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
                           </p>
-                          <p className="text-sm text-gray-500 mt-0.5">Score: {event.globalFluidityScore}%</p>
+                          <p className="text-xs lg:text-sm text-gray-500 mt-0.5">Score: {event.globalFluidityScore}%</p>
                         </div>
                       </div>
                     </motion.button>
@@ -256,11 +257,11 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
         </div>
 
         {/* Event Details Panel */}
-        <div className="space-y-4">
+        <div className="space-y-3 lg:space-y-4 order-1 lg:order-2">
           {selectedEvent ? (
             <>
-              <Card className="p-5">
-                <div className="flex items-center gap-2 mb-3">
+              <Card className="p-4 lg:p-5">
+                <div className="flex items-center gap-2 mb-2 lg:mb-3">
                   {selectedEvent.status === 'live' && (
                     <span className="flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-gray-500 opacity-75" />
@@ -271,25 +272,25 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                     {selectedEvent.status === 'live' ? 'En direct' : selectedEvent.status === 'upcoming' ? 'À venir' : 'Terminé'}
                   </Badge>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">{selectedEvent.name}</h3>
-                <p className="text-sm text-gray-500 mb-4">{selectedEvent.subtitle}</p>
+                <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-1">{selectedEvent.name}</h3>
+                <p className="text-xs lg:text-sm text-gray-500 mb-3 lg:mb-4">{selectedEvent.subtitle}</p>
 
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm">
+                <div className="space-y-2 lg:space-y-3">
+                  <div className="flex items-center justify-between text-xs lg:text-sm">
                     <span className="text-gray-500">Date</span>
                     <span className="font-medium text-gray-900">
-                      {selectedEvent.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      {selectedEvent.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between text-xs lg:text-sm">
                     <span className="text-gray-500">Durée</span>
                     <span className="font-medium text-gray-900">{selectedEvent.duration}</span>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between text-xs lg:text-sm">
                     <span className="text-gray-500">Fréquentation</span>
                     <span className="font-medium text-gray-900">{selectedEvent.currentAttendance.toLocaleString()}</span>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between text-xs lg:text-sm">
                     <span className="text-gray-500">Zones</span>
                     <span className="font-medium text-gray-900">{selectedEvent.zones.length}</span>
                   </div>
@@ -298,33 +299,33 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
 
               {selectedEvent.status !== 'upcoming' && (
                 <>
-                  <Card className="p-5">
-                    <h4 className="text-sm font-semibold text-gray-900 mb-4">Métriques clés</h4>
+                  <Card className="p-4 lg:p-5">
+                    <h4 className="text-xs lg:text-sm font-semibold text-gray-900 mb-3 lg:mb-4">Métriques clés</h4>
                     {/* Seamless tile for metrics */}
                     <div className="rounded-xl overflow-hidden">
                       <div className="grid grid-cols-2 gap-px bg-gray-200">
-                        <div className="p-3 bg-gray-50">
-                          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Fluidité</p>
-                          <p className="text-2xl font-extralight text-gray-900">{selectedEvent.globalFluidityScore}%</p>
+                        <div className="p-2 lg:p-3 bg-gray-50">
+                          <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Fluidité</p>
+                          <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.globalFluidityScore}%</p>
                         </div>
-                        <div className="p-3 bg-gray-50">
-                          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Attente moy.</p>
-                          <p className="text-2xl font-extralight text-gray-900">{selectedEvent.avgWaitTime} min</p>
+                        <div className="p-2 lg:p-3 bg-gray-50">
+                          <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Attente</p>
+                          <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgWaitTime} min</p>
                         </div>
-                        <div className="p-3 bg-gray-50">
-                          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Densité moy.</p>
-                          <p className="text-2xl font-extralight text-gray-900">{selectedEvent.avgDensity}%</p>
+                        <div className="p-2 lg:p-3 bg-gray-50">
+                          <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Densité</p>
+                          <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgDensity}%</p>
                         </div>
-                        <div className="p-3 bg-gray-50">
-                          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Saturation</p>
-                          <p className="text-2xl font-extralight text-gray-900">{selectedEvent.avgSaturation}%</p>
+                        <div className="p-2 lg:p-3 bg-gray-50">
+                          <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Saturation</p>
+                          <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgSaturation}%</p>
                         </div>
                       </div>
                     </div>
                   </Card>
 
                   {selectedEvent.flowHistory.length > 0 && (
-                    <Card className="p-5">
+                    <Card className="p-4 lg:p-5 hidden lg:block">
                       <h4 className="text-sm font-semibold text-gray-900 mb-4">Évolution du flux</h4>
                       <div className="h-32">
                         <ResponsiveContainer width="100%" height="100%">
@@ -361,14 +362,14 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                 </>
               )}
 
-              <Button variant="primary" className="w-full">
+              <Button variant="primary" className="w-full text-sm">
                 Voir le rapport complet
               </Button>
             </>
           ) : (
-            <Card className="p-8">
+            <Card className="p-6 lg:p-8">
               <div className="text-center">
-                <p className="text-sm text-gray-500">Sélectionnez un événement sur le calendrier</p>
+                <p className="text-xs lg:text-sm text-gray-500">Sélectionnez un événement</p>
               </div>
             </Card>
           )}
