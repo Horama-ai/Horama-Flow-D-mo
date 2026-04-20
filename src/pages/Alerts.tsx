@@ -29,11 +29,11 @@ export function Alerts({ event, onUpdateAlert }: AlertsProps) {
   };
 
   const getSeverityStyles = (severity: string, acknowledged: boolean) => {
-    // All alerts have white background with gray left border of varying darkness
+    // White background with subtle colored left border
     if (acknowledged) return 'border-l-gray-300 bg-white';
     switch (severity) {
-      case 'critical': return 'border-l-gray-900 bg-white';
-      case 'warning': return 'border-l-gray-600 bg-white';
+      case 'critical': return 'border-l-rose-400 bg-white';
+      case 'warning': return 'border-l-amber-400 bg-white';
       default: return 'border-l-gray-400 bg-white';
     }
   };
@@ -68,15 +68,15 @@ export function Alerts({ event, onUpdateAlert }: AlertsProps) {
       <div className="rounded-2xl overflow-hidden mb-8">
         <div className="grid grid-cols-4 gap-px bg-gray-200">
           <div className="bg-white p-6 relative">
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-gray-900 rounded-r" />
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-rose-400 rounded-r" />
             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2 pl-4">Critiques</p>
-            <p className="text-4xl font-extralight text-gray-900 tabular-nums pl-4">
+            <p className="text-4xl font-extralight text-rose-500 tabular-nums pl-4">
               {event.alerts.filter(a => a.severity === 'critical' && !a.acknowledged).length}
             </p>
           </div>
           <div className="bg-white p-6">
             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Attention</p>
-            <p className="text-4xl font-extralight text-gray-700 tabular-nums">
+            <p className="text-4xl font-extralight text-amber-500 tabular-nums">
               {event.alerts.filter(a => a.severity === 'warning' && !a.acknowledged).length}
             </p>
           </div>
@@ -88,7 +88,7 @@ export function Alerts({ event, onUpdateAlert }: AlertsProps) {
           </div>
           <div className="bg-white p-6">
             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Résolues</p>
-            <p className="text-4xl font-extralight text-gray-400 tabular-nums">
+            <p className="text-4xl font-extralight text-emerald-500 tabular-nums">
               {event.alerts.filter(a => a.acknowledged).length}
             </p>
           </div>
@@ -123,7 +123,14 @@ export function Alerts({ event, onUpdateAlert }: AlertsProps) {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <Badge variant="default" size="sm">
+                        <Badge
+                          variant={
+                            alert.acknowledged ? 'default' :
+                            alert.severity === 'critical' ? 'red' :
+                            alert.severity === 'warning' ? 'yellow' : 'default'
+                          }
+                          size="sm"
+                        >
                           {alert.severity === 'critical' ? 'Critique' :
                            alert.severity === 'warning' ? 'Attention' : 'Info'}
                         </Badge>

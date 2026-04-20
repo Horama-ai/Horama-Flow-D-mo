@@ -112,7 +112,7 @@ export function Report({ event }: ReportProps) {
                 <div className="mt-3">
                   <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
                     <span>Objectif: {metric.target}{metric.unit}</span>
-                    <span className={isGood ? 'text-gray-700' : 'text-gray-500'}>
+                    <span className={isGood ? 'text-emerald-500' : 'text-amber-500'}>
                       {isGood ? '✓ Atteint' : '○ À améliorer'}
                     </span>
                   </div>

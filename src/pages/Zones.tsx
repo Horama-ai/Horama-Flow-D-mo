@@ -64,13 +64,13 @@ export function Zones({ event }: ZonesProps) {
           </div>
           <div className="bg-white p-6">
             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Zones saturées</p>
-            <p className="text-4xl font-extralight text-gray-900 tabular-nums">
+            <p className="text-4xl font-extralight text-rose-500 tabular-nums">
               {event.zones.filter(z => z.status === 'saturé').length}
             </p>
           </div>
           <div className="bg-white p-6">
             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Zones denses</p>
-            <p className="text-4xl font-extralight text-gray-700 tabular-nums">
+            <p className="text-4xl font-extralight text-amber-500 tabular-nums">
               {event.zones.filter(z => z.status === 'dense').length}
             </p>
           </div>
@@ -96,7 +96,10 @@ export function Zones({ event }: ZonesProps) {
                   <div className="flex items-center gap-2 mb-1">
                     <StatusDot status={zone.status} size="md" />
                     <span className="text-base font-semibold text-gray-900">{zone.shortName}</span>
-                    <Badge variant="default" size="sm">
+                    <Badge
+                      variant={zone.status === 'saturé' ? 'red' : zone.status === 'dense' ? 'yellow' : zone.status === 'fluide' ? 'success' : 'default'}
+                      size="sm"
+                    >
                       {zone.status}
                     </Badge>
                   </div>
@@ -161,7 +164,7 @@ export function Zones({ event }: ZonesProps) {
                       <div className="flex items-center gap-3 mb-1">
                         <StatusDot status={selectedZone.status} size="md" />
                         <h2 className="text-xl font-semibold text-gray-900">{selectedZone.shortName}</h2>
-                        <Badge variant="default">
+                        <Badge variant={selectedZone.status === 'saturé' ? 'red' : selectedZone.status === 'dense' ? 'yellow' : selectedZone.status === 'fluide' ? 'success' : 'default'}>
                           {selectedZone.status}
                         </Badge>
                       </div>

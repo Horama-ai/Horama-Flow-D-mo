@@ -144,7 +144,9 @@ export function Dashboard({ event }: DashboardProps) {
               {event.avgWaitTime}<span className="text-lg text-gray-400 ml-1">min</span>
             </div>
             {waitTimeTrend && (
-              <div className="text-sm font-medium mt-2 text-gray-500">
+              <div className={`text-sm font-medium mt-2 ${
+                waitTimeTrend.direction === 'down' ? 'text-emerald-500' : 'text-rose-400'
+              }`}>
                 {waitTimeTrend.direction === 'up' ? '↑' : '↓'} {waitTimeTrend.value}%
               </div>
             )}
@@ -161,7 +163,9 @@ export function Dashboard({ event }: DashboardProps) {
               {event.avgDensity}<span className="text-lg text-gray-400 ml-1">%</span>
             </div>
             {densityTrend && (
-              <div className="text-sm font-medium mt-2 text-gray-500">
+              <div className={`text-sm font-medium mt-2 ${
+                densityTrend.direction === 'down' ? 'text-emerald-500' : 'text-amber-500'
+              }`}>
                 {densityTrend.direction === 'up' ? '↑' : '↓'} {densityTrend.value}%
               </div>
             )}
@@ -172,7 +176,9 @@ export function Dashboard({ event }: DashboardProps) {
               {event.avgSaturation}<span className="text-lg text-gray-400 ml-1">%</span>
             </div>
             {saturationTrend && (
-              <div className="text-sm font-medium mt-2 text-gray-500">
+              <div className={`text-sm font-medium mt-2 ${
+                saturationTrend.direction === 'down' ? 'text-emerald-500' : 'text-rose-400'
+              }`}>
                 {saturationTrend.direction === 'up' ? '↑' : '↓'} {saturationTrend.value}%
               </div>
             )}
@@ -381,11 +387,11 @@ export function Dashboard({ event }: DashboardProps) {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Zones critiques</span>
-                  <span className="text-lg font-semibold text-gray-900">{criticalZones.length}</span>
+                  <span className="text-lg font-semibold text-rose-500">{criticalZones.length}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Zones denses</span>
-                  <span className="text-lg font-semibold text-gray-700">{warningZones.length}</span>
+                  <span className="text-lg font-semibold text-amber-500">{warningZones.length}</span>
                 </div>
               </div>
             </Card>

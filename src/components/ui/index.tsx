@@ -328,15 +328,15 @@ interface BadgeProps {
 }
 
 export function Badge({ children, variant = 'default', size = 'md', className = '' }: BadgeProps) {
-  // All badges have neutral gray background with small colored dot
+  // Neutral gray background with subtle colored dot
   const dotColors = {
     default: 'bg-gray-400',
-    success: 'bg-gray-900',
-    warning: 'bg-gray-600',
-    danger: 'bg-gray-900',
-    blue: 'bg-gray-900',
-    red: 'bg-gray-900',
-    yellow: 'bg-gray-600'
+    success: 'bg-emerald-400',
+    warning: 'bg-amber-400',
+    danger: 'bg-rose-400',
+    blue: 'bg-gray-700',
+    red: 'bg-rose-400',
+    yellow: 'bg-amber-400'
   };
 
   const sizes = {
@@ -452,12 +452,12 @@ interface StatusDotProps {
 }
 
 export function StatusDot({ status, size = 'sm', showLabel = false }: StatusDotProps) {
-  // Use subtle gray tones for all statuses
+  // Subtle semantic colors for status indication
   const colors = {
-    'fluide': 'bg-gray-400',
-    'modéré': 'bg-gray-500',
-    'dense': 'bg-gray-700',
-    'saturé': 'bg-gray-900'
+    'fluide': 'bg-emerald-400',
+    'modéré': 'bg-gray-400',
+    'dense': 'bg-amber-400',
+    'saturé': 'bg-rose-400'
   };
 
   const sizes = {
@@ -490,18 +490,21 @@ interface ProgressProps {
 export function Progress({ value, max = 100, size = 'sm', color = 'auto', showLabel = false, className = '' }: ProgressProps) {
   const percentage = Math.min(100, (value / max) * 100);
 
-  // Always use anthracite/gray color for consistency
+  // Subtle colors based on threshold - softer tones
   const getColor = () => {
     if (color !== 'auto') {
       const colors = {
         blue: 'bg-gray-800',
-        red: 'bg-gray-800',
-        yellow: 'bg-gray-800',
-        green: 'bg-gray-800'
+        red: 'bg-rose-400',
+        yellow: 'bg-amber-400',
+        green: 'bg-emerald-400'
       };
       return colors[color];
     }
-    return 'bg-gray-800';
+    // Auto mode: color based on percentage
+    if (percentage >= 80) return 'bg-rose-400';
+    if (percentage >= 60) return 'bg-amber-400';
+    return 'bg-emerald-400';
   };
 
   const heights = {
@@ -539,11 +542,11 @@ interface AlertItemProps {
 }
 
 export function AlertItem({ message, severity, zone, time, acknowledged, onAcknowledge }: AlertItemProps) {
-  // All alerts have white background with subtle gray left border
+  // White background with subtle colored left border
   const severityStyles = {
     info: 'border-l-gray-400',
-    warning: 'border-l-gray-600',
-    critical: 'border-l-gray-900'
+    warning: 'border-l-amber-400',
+    critical: 'border-l-rose-400'
   };
 
   return (
