@@ -1,0 +1,379 @@
+import { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import type { Event } from '../data/events';
+import { Card, Badge, Button } from '../components/ui';
+
+interface HistoryProps {
+  events: Event[];
+  selectedEventId: string;
+  onSelectEvent: (eventId: string) => void;
+}
+
+export function History({ events, selectedEventId, onSelectEvent }: HistoryProps) {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [viewMode, setViewMode] = useState<'calendar' | 'list'>('calendar');
+
+  const selectedEvent = events.find(e => e.id === selectedEventId);
+
+  // Get current month's calendar data
+  const calendarData = useMemo(() => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const startingDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Monday start
+
+    const days: Array<{ date: Date | null; events: Event[] }> = [];
+
+    // Previous month padding
+    for (let i = 0; i < startingDay; i++) {
+      days.push({ date: null, events: [] });
+    }
+
+    // Current month days
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      const date = new Date(year, month, day);
+      const dayEvents = events.filter(e => {
+        const eventDate = new Date(e.date);
+        return eventDate.getDate() === day &&
+               eventDate.getMonth() === month &&
+               eventDate.getFullYear() === year;
+      });
+      days.push({ date, events: dayEvents });
+    }
+
+    return days;
+  }, [currentDate, events]);
+
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setMonth(prev.getMonth() + (direction === 'next' ? 1 : -1));
+      return newDate;
+    });
+  };
+
+  const goToToday = () => {
+    setCurrentDate(new Date());
+  };
+
+  const monthNames = [
+    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+  ];
+
+  const dayNames = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+
+  const completedEvents = events.filter(e => e.status === 'completed');
+  const isToday = (date: Date | null) => {
+    if (!date) return false;
+    const today = new Date();
+    return date.getDate() === today.getDate() &&
+           date.getMonth() === today.getMonth() &&
+           date.getFullYear() === today.getFullYear();
+  };
+
+  return (
+    <div className="p-8 max-w-[1600px] mx-auto">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900">Historique</h1>
+          <p className="text-gray-500 mt-1">{completedEvents.length} événements passés</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setViewMode('calendar')}
+            className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+              viewMode === 'calendar' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            Calendrier
+          </button>
+          <button
+            onClick={() => setViewMode('list')}
+            className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+              viewMode === 'list' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            Liste
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-6">
+        {/* Calendar / List View */}
+        <div className="col-span-2">
+          {viewMode === 'calendar' ? (
+            <Card className="p-6">
+              {/* Calendar Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+                  </h2>
+                  <button
+                    onClick={goToToday}
+                    className="text-sm text-prism-600 hover:text-prism-700 font-medium"
+                  >
+                    Aujourd'hui
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => navigateMonth('prev')}
+                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => navigateMonth('next')}
+                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              {/* Day Headers */}
+              <div className="grid grid-cols-7 gap-1 mb-2">
+                {dayNames.map(day => (
+                  <div key={day} className="text-center text-xs font-medium text-gray-500 uppercase tracking-wide py-2">
+                    {day}
+                  </div>
+                ))}
+              </div>
+
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-7 gap-1">
+                {calendarData.map((day, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: idx * 0.01 }}
+                    className={`
+                      min-h-[100px] p-2 rounded-xl border transition-colors
+                      ${day.date ? 'bg-white border-gray-200 hover:border-prism-300' : 'bg-gray-50 border-transparent'}
+                      ${isToday(day.date) ? 'border-prism-500 border-2' : ''}
+                    `}
+                  >
+                    {day.date && (
+                      <>
+                        <span className={`text-sm font-medium ${isToday(day.date) ? 'text-prism-600' : 'text-gray-900'}`}>
+                          {day.date.getDate()}
+                        </span>
+                        <div className="mt-1 space-y-1">
+                          {day.events.slice(0, 2).map(event => {
+                            const isSelected = event.id === selectedEventId;
+                            return (
+                              <button
+                                key={event.id}
+                                onClick={() => onSelectEvent(event.id)}
+                                className={`
+                                  w-full text-left px-1.5 py-1 text-xs rounded-md truncate transition-all
+                                  ${isSelected
+                                    ? 'bg-gray-900 text-white font-medium'
+                                    : event.status === 'live'
+                                      ? 'bg-prism-100 text-prism-700 hover:bg-prism-200'
+                                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                  }
+                                `}
+                              >
+                                {event.status === 'live' && '● '}
+                                {event.name}
+                              </button>
+                            );
+                          })}
+                          {day.events.length > 2 && (
+                            <span className="text-xs text-gray-400">+{day.events.length - 2} autres</span>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Legend */}
+              <div className="flex items-center gap-6 mt-6 pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-prism-600" />
+                  <span className="text-xs text-gray-500">En direct</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded bg-gray-100" />
+                  <span className="text-xs text-gray-500">Événement</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded bg-gray-900" />
+                  <span className="text-xs text-gray-500">Sélectionné</span>
+                </div>
+              </div>
+            </Card>
+          ) : (
+            <Card className="p-0 overflow-hidden">
+              <div className="divide-y divide-gray-100">
+                {completedEvents.map((event, idx) => {
+                  const isSelected = event.id === selectedEventId;
+                  return (
+                    <motion.button
+                      key={event.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.03 }}
+                      onClick={() => onSelectEvent(event.id)}
+                      className={`w-full p-4 text-left hover:bg-gray-50 transition-colors flex items-center ${
+                        isSelected ? 'bg-prism-50 border-l-4 border-l-prism-500' : ''
+                      }`}
+                    >
+                      <div className="flex-1 flex items-center justify-between">
+                        <div>
+                          <p className={`font-medium ${isSelected ? 'text-prism-700' : 'text-gray-900'}`}>
+                            {event.name}
+                          </p>
+                          <p className="text-sm text-gray-500 mt-0.5">{event.subtitle}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-medium text-gray-900">
+                            {event.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                          </p>
+                          <p className="text-sm text-gray-500 mt-0.5">Score: {event.globalFluidityScore}%</p>
+                        </div>
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </Card>
+          )}
+        </div>
+
+        {/* Event Details Panel */}
+        <div className="space-y-4">
+          {selectedEvent ? (
+            <>
+              <Card className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  {selectedEvent.status === 'live' && (
+                    <span className="flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-prism-500 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-prism-600" />
+                    </span>
+                  )}
+                  <Badge variant={selectedEvent.status === 'live' ? 'blue' : selectedEvent.status === 'upcoming' ? 'yellow' : 'default'}>
+                    {selectedEvent.status === 'live' ? 'En direct' : selectedEvent.status === 'upcoming' ? 'À venir' : 'Terminé'}
+                  </Badge>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">{selectedEvent.name}</h3>
+                <p className="text-sm text-gray-500 mb-4">{selectedEvent.subtitle}</p>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Date</span>
+                    <span className="font-medium text-gray-900">
+                      {selectedEvent.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Durée</span>
+                    <span className="font-medium text-gray-900">{selectedEvent.duration}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Fréquentation</span>
+                    <span className="font-medium text-gray-900">{selectedEvent.currentAttendance.toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Zones</span>
+                    <span className="font-medium text-gray-900">{selectedEvent.zones.length}</span>
+                  </div>
+                </div>
+              </Card>
+
+              {selectedEvent.status !== 'upcoming' && (
+                <>
+                  <Card className="p-5">
+                    <h4 className="text-sm font-semibold text-gray-900 mb-4">Métriques clés</h4>
+                    {/* Seamless tile for metrics */}
+                    <div className="rounded-xl overflow-hidden">
+                      <div className="grid grid-cols-2 gap-px bg-gray-200">
+                        <div className="p-3 bg-gray-50">
+                          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Fluidité</p>
+                          <p className="text-2xl font-extralight text-gray-900">{selectedEvent.globalFluidityScore}%</p>
+                        </div>
+                        <div className="p-3 bg-gray-50">
+                          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Attente moy.</p>
+                          <p className="text-2xl font-extralight text-gray-900">{selectedEvent.avgWaitTime} min</p>
+                        </div>
+                        <div className="p-3 bg-gray-50">
+                          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Densité moy.</p>
+                          <p className="text-2xl font-extralight text-gray-900">{selectedEvent.avgDensity}%</p>
+                        </div>
+                        <div className="p-3 bg-gray-50">
+                          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Saturation</p>
+                          <p className="text-2xl font-extralight text-gray-900">{selectedEvent.avgSaturation}%</p>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+
+                  {selectedEvent.flowHistory.length > 0 && (
+                    <Card className="p-5">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-4">Évolution du flux</h4>
+                      <div className="h-32">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={selectedEvent.flowHistory}>
+                            <defs>
+                              <linearGradient id="historyGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#0c7ff2" stopOpacity={0.2} />
+                                <stop offset="100%" stopColor="#0c7ff2" stopOpacity={0} />
+                              </linearGradient>
+                            </defs>
+                            <XAxis dataKey="time" hide />
+                            <YAxis hide />
+                            <Tooltip
+                              contentStyle={{
+                                backgroundColor: '#1f2937',
+                                border: 'none',
+                                borderRadius: '6px',
+                                color: 'white',
+                                fontSize: '11px'
+                              }}
+                            />
+                            <Area
+                              type="monotone"
+                              dataKey="value"
+                              stroke="#0c7ff2"
+                              strokeWidth={2}
+                              fill="url(#historyGradient)"
+                            />
+                          </AreaChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </Card>
+                  )}
+                </>
+              )}
+
+              <Button variant="primary" className="w-full">
+                Voir le rapport complet
+              </Button>
+            </>
+          ) : (
+            <Card className="p-8">
+              <div className="text-center">
+                <p className="text-sm text-gray-500">Sélectionnez un événement sur le calendrier</p>
+              </div>
+            </Card>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
