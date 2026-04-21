@@ -35,14 +35,22 @@ export function Dashboard({ event }: DashboardProps) {
     objective?: number;
   }) => (
     <Card className="overflow-hidden">
-      <div className="px-4 lg:px-5 py-3 lg:py-4 border-b border-gray-100">
-        <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
-        <p className="text-xs text-gray-500">{unit}</p>
+      <div className="px-4 lg:px-5 py-3 lg:py-4 border-b border-gray-100 flex items-start justify-between">
+        <div>
+          <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+          <p className="text-xs text-gray-500">{unit}</p>
+        </div>
+        {objective !== undefined && (
+          <div className="flex items-center gap-1.5">
+            <svg width="24" height="2" className="flex-shrink-0"><line x1="0" y1="1" x2="24" y2="1" stroke="#22c55e" strokeWidth="2" strokeDasharray="4 3" /></svg>
+            <span className="text-[10px] font-semibold text-emerald-500 whitespace-nowrap">Obj: {objective}{unit}</span>
+          </div>
+        )}
       </div>
       <div className="p-3 lg:p-4">
         <div className="h-32 lg:h-40">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data} margin={{ top: 5, right: 60, left: -10, bottom: 0 }}>
+            <AreaChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
               <defs>
                 <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#0c7ff2" stopOpacity={0.12} />
@@ -81,14 +89,6 @@ export function Dashboard({ event }: DashboardProps) {
                   stroke="#22c55e"
                   strokeWidth={1.5}
                   strokeDasharray="6 4"
-                  label={{
-                    value: `Obj: ${objective}${unit}`,
-                    position: 'insideTopRight',
-                    fill: '#22c55e',
-                    fontSize: 10,
-                    fontWeight: 600,
-                    dy: -12
-                  }}
                 />
               )}
               <Area
