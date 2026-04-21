@@ -404,16 +404,23 @@ function generateAlerts(zones: Zone[], eventDate: Date): Alert[] {
   return alerts;
 }
 
+// Helper to get today's date with specific time
+const getTodayWithTime = (hours: number, minutes: number = 0): Date => {
+  const today = new Date();
+  today.setHours(hours, minutes, 0, 0);
+  return today;
+};
+
 // Generate events database with multiple months of data
 export const eventsDatabase: Event[] = [
   // === STADE DE FRANCE EVENTS ===
-  // Live event
+  // Live event - always today
   {
     id: 'sf-concert-live',
     accountId: 'stade-france',
     name: 'Concert Coldplay',
     subtitle: 'World Tour 2026',
-    date: new Date(2026, 3, 20, 20, 0),
+    date: getTodayWithTime(20, 0),
     status: 'live',
     duration: '4h',
     currentAttendance: 72450,
@@ -761,13 +768,13 @@ export const eventsDatabase: Event[] = [
   },
 
   // === TOUR DE FRANCE EVENTS ===
-  // Live event
+  // Live event - always today
   {
     id: 'tdf-etape-live',
     accountId: 'tdf',
     name: 'Village Étape Briançon',
     subtitle: 'Étape 18 - Embrun → Briançon',
-    date: new Date(2026, 3, 20, 10, 0),
+    date: getTodayWithTime(10, 0),
     status: 'live',
     duration: '8h',
     currentAttendance: 4350,

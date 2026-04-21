@@ -153,18 +153,15 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
 
               {/* Calendar Grid */}
               <div className="grid grid-cols-7 gap-0.5 lg:gap-1">
-                {calendarData.map((day, idx) => {
-                  const hasSelectedEvent = day.events.some(e => e.id === selectedEventId);
-                  return (
-                    <div
-                      key={idx}
-                      className={`
-                        min-h-[48px] lg:min-h-[100px] p-1 lg:p-2 rounded-lg lg:rounded-xl border transition-colors
-                        ${day.date ? 'bg-white border-gray-200 hover:border-gray-400' : 'bg-gray-50 border-transparent'}
-                        ${isToday(day.date) ? 'border-gray-900 border-2' : ''}
-                        ${hasSelectedEvent ? 'ring-2 ring-blue-500 ring-offset-1' : ''}
-                      `}
-                    >
+                {calendarData.map((day, idx) => (
+                  <div
+                    key={idx}
+                    className={`
+                      min-h-[48px] lg:min-h-[100px] p-1 lg:p-2 rounded-lg lg:rounded-xl border transition-colors
+                      ${day.date ? 'bg-white border-gray-200 hover:border-gray-400' : 'bg-gray-50 border-transparent'}
+                      ${isToday(day.date) ? 'border-gray-900 border-2' : ''}
+                    `}
+                  >
                       {day.date && (
                         <>
                           <span className={`text-xs lg:text-sm font-medium ${isToday(day.date) ? 'text-gray-900' : 'text-gray-900'}`}>
@@ -199,8 +196,7 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                         </>
                       )}
                     </div>
-                  );
-                })}
+                ))}
               </div>
 
               {/* Legend */}
@@ -259,22 +255,17 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
 
         {/* Event Details Panel */}
         <div className="space-y-3 lg:space-y-4 order-1 lg:order-2">
-          <AnimatePresence mode="wait">
+          <AnimatePresence initial={false}>
             {selectedEvent ? (
               <motion.div
                 key={selectedEvent.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2 }}
                 className="space-y-3 lg:space-y-4"
               >
                 <Card className="p-4 lg:p-5">
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.1 }}
-                  >
+                  <div>
                     <div className="flex items-center gap-2 mb-2 lg:mb-3">
                       {selectedEvent.status === 'live' && (
                         <span className="flex h-2 w-2">
@@ -309,68 +300,37 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                         <span className="font-medium text-gray-900">{selectedEvent.zones.length}</span>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </Card>
 
                 {selectedEvent.status !== 'upcoming' && (
                   <>
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.15 }}
-                    >
-                      <Card className="p-4 lg:p-5">
-                        <h4 className="text-xs lg:text-sm font-semibold text-gray-900 mb-3 lg:mb-4">Métriques clés</h4>
-                        {/* Seamless tile for metrics */}
-                        <div className="rounded-xl overflow-hidden">
-                          <div className="grid grid-cols-2 gap-px bg-gray-200">
-                            <motion.div
-                              className="p-2 lg:p-3 bg-gray-50"
-                              initial={{ opacity: 0, scale: 0.9 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: 0.2 }}
-                            >
-                              <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Fluidité</p>
-                              <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.globalFluidityScore}%</p>
-                            </motion.div>
-                            <motion.div
-                              className="p-2 lg:p-3 bg-gray-50"
-                              initial={{ opacity: 0, scale: 0.9 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: 0.25 }}
-                            >
-                              <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Attente</p>
-                              <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgWaitTime} min</p>
-                            </motion.div>
-                            <motion.div
-                              className="p-2 lg:p-3 bg-gray-50"
-                              initial={{ opacity: 0, scale: 0.9 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: 0.3 }}
-                            >
-                              <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Densité</p>
-                              <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgDensity}%</p>
-                            </motion.div>
-                            <motion.div
-                              className="p-2 lg:p-3 bg-gray-50"
-                              initial={{ opacity: 0, scale: 0.9 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: 0.35 }}
-                            >
-                              <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Saturation</p>
-                              <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgSaturation}%</p>
-                            </motion.div>
+                    <Card className="p-4 lg:p-5">
+                      <h4 className="text-xs lg:text-sm font-semibold text-gray-900 mb-3 lg:mb-4">Métriques clés</h4>
+                      {/* Seamless tile for metrics */}
+                      <div className="rounded-xl overflow-hidden">
+                        <div className="grid grid-cols-2 gap-px bg-gray-200">
+                          <div className="p-2 lg:p-3 bg-gray-50">
+                            <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Fluidité</p>
+                            <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.globalFluidityScore}%</p>
+                          </div>
+                          <div className="p-2 lg:p-3 bg-gray-50">
+                            <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Attente</p>
+                            <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgWaitTime} min</p>
+                          </div>
+                          <div className="p-2 lg:p-3 bg-gray-50">
+                            <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Densité</p>
+                            <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgDensity}%</p>
+                          </div>
+                          <div className="p-2 lg:p-3 bg-gray-50">
+                            <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Saturation</p>
+                            <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgSaturation}%</p>
                           </div>
                         </div>
-                      </Card>
-                    </motion.div>
+                      </div>
+                    </Card>
 
                     {selectedEvent.flowHistory.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                      >
                         <Card className="p-4 lg:p-5 hidden lg:block">
                           <h4 className="text-sm font-semibold text-gray-900 mb-4">Évolution du flux</h4>
                           <div className="h-32">
@@ -404,32 +364,20 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                             </ResponsiveContainer>
                           </div>
                         </Card>
-                      </motion.div>
                     )}
                   </>
                 )}
 
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.45 }}
-                >
-                  <Button variant="primary" className="w-full text-sm">
-                    Voir le rapport complet
-                  </Button>
-                </motion.div>
+                <Button variant="primary" className="w-full text-sm">
+                  Voir le rapport complet
+                </Button>
               </motion.div>
             ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <Card className="p-6 lg:p-8">
-                  <div className="text-center">
-                    <p className="text-xs lg:text-sm text-gray-500">Sélectionnez un événement</p>
-                  </div>
-                </Card>
-              </motion.div>
+              <Card className="p-6 lg:p-8">
+                <div className="text-center">
+                  <p className="text-xs lg:text-sm text-gray-500">Sélectionnez un événement</p>
+                </div>
+              </Card>
             )}
           </AnimatePresence>
         </div>
