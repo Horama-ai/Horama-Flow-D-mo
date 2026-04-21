@@ -202,6 +202,10 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
               {/* Legend */}
               <div className="hidden lg:flex items-center gap-6 mt-6 pt-4 border-t border-gray-100">
                 <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded border-2 border-gray-900 bg-white" />
+                  <span className="text-xs text-gray-500">Aujourd'hui</span>
+                </div>
+                <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-gray-700" />
                   <span className="text-xs text-gray-500">En direct</span>
                 </div>
