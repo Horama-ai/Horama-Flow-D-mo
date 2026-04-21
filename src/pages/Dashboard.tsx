@@ -42,7 +42,7 @@ export function Dashboard({ event }: DashboardProps) {
       <div className="p-3 lg:p-4">
         <div className="h-32 lg:h-40">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
+            <AreaChart data={data} margin={{ top: 5, right: 60, left: -10, bottom: 0 }}>
               <defs>
                 <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#0c7ff2" stopOpacity={0.12} />
@@ -83,10 +83,11 @@ export function Dashboard({ event }: DashboardProps) {
                   strokeDasharray="6 4"
                   label={{
                     value: `Obj: ${objective}${unit}`,
-                    position: 'right',
+                    position: 'insideTopRight',
                     fill: '#22c55e',
-                    fontSize: 9,
-                    fontWeight: 500
+                    fontSize: 10,
+                    fontWeight: 600,
+                    dy: -12
                   }}
                 />
               )}
@@ -149,7 +150,7 @@ export function Dashboard({ event }: DashboardProps) {
             <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
               {event.avgWaitTime}<span className="text-sm lg:text-lg text-gray-400 ml-1">min</span>
             </div>
-            <div className="text-xs lg:text-sm text-gray-400 mt-1 lg:mt-2">
+            <div className={`text-xs lg:text-sm font-medium mt-1 lg:mt-2 ${event.avgWaitTime <= OBJECTIVES.waitTime ? 'text-emerald-500' : 'text-rose-500'}`}>
               Obj: {OBJECTIVES.waitTime} min
             </div>
           </div>
@@ -158,7 +159,7 @@ export function Dashboard({ event }: DashboardProps) {
             <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
               {event.avgPassageTime}<span className="text-sm lg:text-lg text-gray-400 ml-1">min</span>
             </div>
-            <div className="text-xs lg:text-sm text-gray-400 mt-1 lg:mt-2">
+            <div className={`text-xs lg:text-sm font-medium mt-1 lg:mt-2 ${event.avgPassageTime <= OBJECTIVES.passageTime ? 'text-emerald-500' : 'text-rose-500'}`}>
               Obj: {OBJECTIVES.passageTime} min
             </div>
           </div>
@@ -167,7 +168,7 @@ export function Dashboard({ event }: DashboardProps) {
             <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
               {event.avgDensity}<span className="text-sm lg:text-lg text-gray-400 ml-1">%</span>
             </div>
-            <div className="text-xs lg:text-sm text-gray-400 mt-1 lg:mt-2">
+            <div className={`text-xs lg:text-sm font-medium mt-1 lg:mt-2 ${event.avgDensity <= OBJECTIVES.density ? 'text-emerald-500' : 'text-rose-500'}`}>
               Obj: {OBJECTIVES.density}%
             </div>
           </div>
@@ -176,7 +177,7 @@ export function Dashboard({ event }: DashboardProps) {
             <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
               {event.avgSaturation}<span className="text-sm lg:text-lg text-gray-400 ml-1">%</span>
             </div>
-            <div className="text-xs lg:text-sm text-gray-400 mt-1 lg:mt-2">
+            <div className={`text-xs lg:text-sm font-medium mt-1 lg:mt-2 ${event.avgSaturation <= OBJECTIVES.saturation ? 'text-emerald-500' : 'text-rose-500'}`}>
               Obj: {OBJECTIVES.saturation}%
             </div>
           </div>
