@@ -98,11 +98,6 @@ export function Compare({ events }: CompareProps) {
     return 'grid-cols-2 lg:grid-cols-5';
   };
 
-  const getChartGridCols = () => {
-    if (count <= 2) return 'lg:grid-cols-2';
-    return 'lg:grid-cols-3';
-  };
-
   return (
     <div className="p-4 lg:p-8 max-w-[1800px] mx-auto">
       {/* Header */}
@@ -298,10 +293,10 @@ export function Compare({ events }: CompareProps) {
             })}
           </div>
 
-          {/* Charts Grid - Adaptive */}
-          <div className={`grid grid-cols-1 ${getChartGridCols()} gap-4 lg:gap-6`}>
-            {/* Performance Metrics - Visual Cards */}
-            <Card className="p-4 lg:p-6">
+          {/* Charts Grid - Performance left, Metrics + Attendance stacked right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+            {/* Performance Metrics - Visual Cards (full height left) */}
+            <Card className="p-4 lg:p-6 lg:row-span-2">
               <div className="mb-5">
                 <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Performance globale</h3>
                 <p className="text-xs text-gray-500 mt-1">Comparaison multi-critères sur 5 axes (score 0-100)</p>
@@ -361,13 +356,15 @@ export function Compare({ events }: CompareProps) {
               </div>
             </Card>
 
-            {/* Metrics Bar Chart */}
-            <Card className="p-4 lg:p-6">
-              <div className="mb-4">
-                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Métriques clés</h3>
-                <p className="text-xs text-gray-500 mt-1">Indicateurs opérationnels comparés par événement</p>
-              </div>
-              <div className="h-64 lg:h-72">
+            {/* Right column: Métriques + Fréquentation stacked */}
+            <div className="flex flex-col gap-4 lg:gap-6">
+              {/* Metrics Bar Chart */}
+              <Card className="p-4 lg:p-6 flex-1">
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Métriques clés</h3>
+                  <p className="text-xs text-gray-500 mt-1">Indicateurs opérationnels comparés par événement</p>
+                </div>
+                <div className="h-44 lg:h-48">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={metricsBarData} layout="vertical" barGap={2}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" horizontal={false} />
@@ -417,24 +414,24 @@ export function Compare({ events }: CompareProps) {
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-              {/* Legend */}
-              <div className="flex flex-wrap justify-center gap-4 mt-4 pt-4 border-t border-gray-100">
-                {selected.map((event, idx) => (
-                  <div key={event.id} className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: eventColors[idx].main }} />
-                    <span className="text-sm text-gray-700 font-medium">{event.name.substring(0, 15)}</span>
-                  </div>
-                ))}
-              </div>
-            </Card>
+                {/* Legend */}
+                <div className="flex flex-wrap justify-center gap-4 mt-3 pt-3 border-t border-gray-100">
+                  {selected.map((event, idx) => (
+                    <div key={event.id} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: eventColors[idx].main }} />
+                      <span className="text-xs text-gray-700 font-medium">{event.name.substring(0, 12)}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
 
-            {/* Attendance Chart */}
-            <Card className="p-4 lg:p-6">
-              <div className="mb-4">
-                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Fréquentation</h3>
-                <p className="text-xs text-gray-500 mt-1">Nombre total de visiteurs par événement</p>
-              </div>
-              <div className="h-64 lg:h-72">
+              {/* Attendance Chart */}
+              <Card className="p-4 lg:p-6 flex-1">
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Fréquentation</h3>
+                  <p className="text-xs text-gray-500 mt-1">Nombre total de visiteurs par événement</p>
+                </div>
+                <div className="h-44 lg:h-48">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={attendanceData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
@@ -470,7 +467,8 @@ export function Compare({ events }: CompareProps) {
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-            </Card>
+              </Card>
+            </div>
           </div>
 
           {/* Comparison Table */}
