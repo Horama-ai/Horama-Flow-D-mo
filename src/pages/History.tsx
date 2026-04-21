@@ -277,7 +277,7 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                           <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-900" />
                         </span>
                       )}
-                      <Badge variant={selectedEvent.status === 'live' ? 'blue' : selectedEvent.status === 'upcoming' ? 'yellow' : 'default'}>
+                      <Badge variant={selectedEvent.status === 'live' ? 'danger' : selectedEvent.status === 'upcoming' ? 'yellow' : 'success'}>
                         {selectedEvent.status === 'live' ? 'En direct' : selectedEvent.status === 'upcoming' ? 'À venir' : 'Terminé'}
                       </Badge>
                     </div>
