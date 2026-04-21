@@ -30,7 +30,7 @@ const navItems: Array<{ id: PageId; label: string; icon: typeof LayoutDashboard;
   { id: 'dashboard', label: 'Tableau de bord', icon: LayoutDashboard, section: 'monitoring' },
   { id: 'zones', label: 'Zones', icon: Layers, section: 'monitoring' },
   { id: 'alerts', label: 'Alertes', icon: Bell, section: 'monitoring' },
-  { id: 'history', label: 'Historique', icon: Calendar, section: 'analysis' },
+  { id: 'history', label: 'Calendrier', icon: Calendar, section: 'analysis' },
   { id: 'compare', label: 'Comparaison', icon: GitCompare, section: 'analysis' },
   { id: 'report', label: 'Rapport', icon: FileText, section: 'analysis' },
 ];

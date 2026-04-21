@@ -9,8 +9,10 @@ import {
   Tooltip,
   CartesianGrid,
   Cell,
+  LineChart,
+  Line,
 } from 'recharts';
-import { TrendingUp, Users, Clock, Activity, Zap, ChevronDown, Check } from 'lucide-react';
+import { TrendingUp, Users, Clock, Activity, Zap, ChevronDown, Check, BarChart3 } from 'lucide-react';
 import type { Event } from '../data/events';
 import { Card, Badge, Button } from '../components/ui';
 
@@ -38,9 +40,19 @@ const metricDescriptions: Record<string, string> = {
   'Saturation': 'Niveau d\'occupation des zones critiques',
 };
 
+// Métriques disponibles pour l'évolution
+const evolutionMetrics = [
+  { key: 'fluidite', label: 'Fluidité', unit: '%' },
+  { key: 'attente', label: 'Attente', unit: 'min' },
+  { key: 'densite', label: 'Densité', unit: '%' },
+  { key: 'saturation', label: 'Saturation', unit: '%' },
+];
+
 export function Compare({ events }: CompareProps) {
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const [showEventSelector, setShowEventSelector] = useState(false);
+  const [selectedEvolutionMetric, setSelectedEvolutionMetric] = useState('fluidite');
+  const [showMetricDropdown, setShowMetricDropdown] = useState(false);
   const comparableEvents = events.filter(e => e.status === 'completed' || e.status === 'live');
 
   const toggleEvent = (eventId: string) => {
@@ -550,6 +562,151 @@ export function Compare({ events }: CompareProps) {
                   })}
                 </tbody>
               </table>
+            </div>
+          </Card>
+
+          {/* Evolution Chart */}
+          <Card className="p-4 lg:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Évolution horaire</h3>
+                <p className="text-xs text-gray-500 mt-1">Tendance au fil de la journée par événement</p>
+              </div>
+
+              {/* Metric Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowMetricDropdown(!showMetricDropdown)}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors min-w-[140px]"
+                >
+                  <BarChart3 className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm font-medium text-gray-700">
+                    {evolutionMetrics.find(m => m.key === selectedEvolutionMetric)?.label}
+                  </span>
+                  <ChevronDown className={`w-4 h-4 text-gray-400 ml-auto transition-transform ${showMetricDropdown ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {showMetricDropdown && (
+                    <>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-40"
+                        onClick={() => setShowMetricDropdown(false)}
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden"
+                      >
+                        {evolutionMetrics.map((metric) => (
+                          <button
+                            key={metric.key}
+                            onClick={() => {
+                              setSelectedEvolutionMetric(metric.key);
+                              setShowMetricDropdown(false);
+                            }}
+                            className={`w-full px-4 py-2.5 text-left text-sm hover:bg-gray-50 transition-colors flex items-center justify-between ${
+                              selectedEvolutionMetric === metric.key ? 'bg-gray-100 font-medium' : ''
+                            }`}
+                          >
+                            <span className="text-gray-700">{metric.label}</span>
+                            {selectedEvolutionMetric === metric.key && (
+                              <Check className="w-4 h-4 text-gray-900" />
+                            )}
+                          </button>
+                        ))}
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+
+            {/* Evolution Line Chart */}
+            <div className="h-64 lg:h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={(() => {
+                    // Generate hourly data for comparison
+                    const hours = ['08h', '09h', '10h', '11h', '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h'];
+                    return hours.map((hour, idx) => {
+                      const dataPoint: Record<string, string | number> = { hour };
+                      selected.forEach((event, eventIdx) => {
+                        // Generate synthetic data based on event metrics
+                        const baseValue = selectedEvolutionMetric === 'fluidite' ? event.globalFluidityScore
+                          : selectedEvolutionMetric === 'attente' ? event.avgWaitTime
+                          : selectedEvolutionMetric === 'densite' ? event.avgDensity
+                          : event.avgSaturation;
+
+                        // Create a curve pattern
+                        const variation = Math.sin((idx / 14) * Math.PI) * 20;
+                        const noise = (Math.random() - 0.5) * 10;
+                        dataPoint[`event${eventIdx}`] = Math.max(0, Math.min(100, baseValue + variation + noise + (eventIdx * 5)));
+                      });
+                      return dataPoint;
+                    });
+                  })()}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                  <XAxis
+                    dataKey="hour"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 11, fill: '#6b7280' }}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fill: '#6b7280' }}
+                    domain={[0, 100]}
+                    tickFormatter={(value) => `${value}${evolutionMetrics.find(m => m.key === selectedEvolutionMetric)?.unit || ''}`}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#111827',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '12px',
+                      padding: '12px',
+                    }}
+                    labelStyle={{ color: '#f9fafb', fontWeight: 'bold', marginBottom: '4px' }}
+                    itemStyle={{ color: '#f9fafb' }}
+                    formatter={(value, name) => {
+                      const eventIdx = parseInt(String(name).replace('event', ''));
+                      const metric = evolutionMetrics.find(m => m.key === selectedEvolutionMetric);
+                      return [
+                        `${Number(value).toFixed(0)}${metric?.unit || ''}`,
+                        selected[eventIdx]?.name.substring(0, 15) || ''
+                      ];
+                    }}
+                  />
+                  {selected.map((_, idx) => (
+                    <Line
+                      key={idx}
+                      type="monotone"
+                      dataKey={`event${idx}`}
+                      stroke={eventColors[idx].main}
+                      strokeWidth={2}
+                      dot={false}
+                      activeDot={{ r: 4, fill: eventColors[idx].main }}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Legend */}
+            <div className="flex flex-wrap justify-center gap-4 mt-4 pt-4 border-t border-gray-100">
+              {selected.map((event, idx) => (
+                <div key={event.id} className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: eventColors[idx].main }} />
+                  <span className="text-sm text-gray-700 font-medium">{event.name.substring(0, 15)}</span>
+                </div>
+              ))}
             </div>
           </Card>
 

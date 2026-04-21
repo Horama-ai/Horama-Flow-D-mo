@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import type { Event } from '../data/events';
 import { Card, Badge, Button } from '../components/ui';
@@ -80,7 +80,7 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
       {/* Header */}
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between mb-6 lg:mb-8">
         <div>
-          <h1 className="text-xl lg:text-2xl font-semibold text-gray-900">Historique</h1>
+          <h1 className="text-xl lg:text-2xl font-semibold text-gray-900">Calendrier</h1>
           <p className="text-sm text-gray-500 mt-1">{completedEvents.length} événements passés</p>
         </div>
         <div className="flex items-center gap-2">
@@ -258,121 +258,179 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
 
         {/* Event Details Panel */}
         <div className="space-y-3 lg:space-y-4 order-1 lg:order-2">
-          {selectedEvent ? (
-            <>
-              <Card className="p-4 lg:p-5">
-                <div className="flex items-center gap-2 mb-2 lg:mb-3">
-                  {selectedEvent.status === 'live' && (
-                    <span className="flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-gray-500 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-900" />
-                    </span>
-                  )}
-                  <Badge variant={selectedEvent.status === 'live' ? 'blue' : selectedEvent.status === 'upcoming' ? 'yellow' : 'default'}>
-                    {selectedEvent.status === 'live' ? 'En direct' : selectedEvent.status === 'upcoming' ? 'À venir' : 'Terminé'}
-                  </Badge>
-                </div>
-                <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-1">{selectedEvent.name}</h3>
-                <p className="text-xs lg:text-sm text-gray-500 mb-3 lg:mb-4">{selectedEvent.subtitle}</p>
+          <AnimatePresence mode="wait">
+            {selectedEvent ? (
+              <motion.div
+                key={selectedEvent.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className="space-y-3 lg:space-y-4"
+              >
+                <Card className="p-4 lg:p-5">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <div className="flex items-center gap-2 mb-2 lg:mb-3">
+                      {selectedEvent.status === 'live' && (
+                        <span className="flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-gray-500 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-900" />
+                        </span>
+                      )}
+                      <Badge variant={selectedEvent.status === 'live' ? 'blue' : selectedEvent.status === 'upcoming' ? 'yellow' : 'default'}>
+                        {selectedEvent.status === 'live' ? 'En direct' : selectedEvent.status === 'upcoming' ? 'À venir' : 'Terminé'}
+                      </Badge>
+                    </div>
+                    <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-1">{selectedEvent.name}</h3>
+                    <p className="text-xs lg:text-sm text-gray-500 mb-3 lg:mb-4">{selectedEvent.subtitle}</p>
 
-                <div className="space-y-2 lg:space-y-3">
-                  <div className="flex items-center justify-between text-xs lg:text-sm">
-                    <span className="text-gray-500">Date</span>
-                    <span className="font-medium text-gray-900">
-                      {selectedEvent.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs lg:text-sm">
-                    <span className="text-gray-500">Durée</span>
-                    <span className="font-medium text-gray-900">{selectedEvent.duration}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs lg:text-sm">
-                    <span className="text-gray-500">Fréquentation</span>
-                    <span className="font-medium text-gray-900">{selectedEvent.currentAttendance.toLocaleString()}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs lg:text-sm">
-                    <span className="text-gray-500">Zones</span>
-                    <span className="font-medium text-gray-900">{selectedEvent.zones.length}</span>
-                  </div>
-                </div>
-              </Card>
-
-              {selectedEvent.status !== 'upcoming' && (
-                <>
-                  <Card className="p-4 lg:p-5">
-                    <h4 className="text-xs lg:text-sm font-semibold text-gray-900 mb-3 lg:mb-4">Métriques clés</h4>
-                    {/* Seamless tile for metrics */}
-                    <div className="rounded-xl overflow-hidden">
-                      <div className="grid grid-cols-2 gap-px bg-gray-200">
-                        <div className="p-2 lg:p-3 bg-gray-50">
-                          <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Fluidité</p>
-                          <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.globalFluidityScore}%</p>
-                        </div>
-                        <div className="p-2 lg:p-3 bg-gray-50">
-                          <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Attente</p>
-                          <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgWaitTime} min</p>
-                        </div>
-                        <div className="p-2 lg:p-3 bg-gray-50">
-                          <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Densité</p>
-                          <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgDensity}%</p>
-                        </div>
-                        <div className="p-2 lg:p-3 bg-gray-50">
-                          <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Saturation</p>
-                          <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgSaturation}%</p>
-                        </div>
+                    <div className="space-y-2 lg:space-y-3">
+                      <div className="flex items-center justify-between text-xs lg:text-sm">
+                        <span className="text-gray-500">Date</span>
+                        <span className="font-medium text-gray-900">
+                          {selectedEvent.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs lg:text-sm">
+                        <span className="text-gray-500">Durée</span>
+                        <span className="font-medium text-gray-900">{selectedEvent.duration}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs lg:text-sm">
+                        <span className="text-gray-500">Fréquentation</span>
+                        <span className="font-medium text-gray-900">{selectedEvent.currentAttendance.toLocaleString()}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs lg:text-sm">
+                        <span className="text-gray-500">Zones</span>
+                        <span className="font-medium text-gray-900">{selectedEvent.zones.length}</span>
                       </div>
                     </div>
-                  </Card>
+                  </motion.div>
+                </Card>
 
-                  {selectedEvent.flowHistory.length > 0 && (
-                    <Card className="p-4 lg:p-5 hidden lg:block">
-                      <h4 className="text-sm font-semibold text-gray-900 mb-4">Évolution du flux</h4>
-                      <div className="h-32">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart data={selectedEvent.flowHistory}>
-                            <defs>
-                              <linearGradient id="historyGradient" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#0c7ff2" stopOpacity={0.2} />
-                                <stop offset="100%" stopColor="#0c7ff2" stopOpacity={0} />
-                              </linearGradient>
-                            </defs>
-                            <XAxis dataKey="time" hide />
-                            <YAxis hide />
-                            <Tooltip
-                              contentStyle={{
-                                backgroundColor: '#1f2937',
-                                border: 'none',
-                                borderRadius: '6px',
-                                color: 'white',
-                                fontSize: '11px'
-                              }}
-                            />
-                            <Area
-                              type="monotone"
-                              dataKey="value"
-                              stroke="#0c7ff2"
-                              strokeWidth={2}
-                              fill="url(#historyGradient)"
-                            />
-                          </AreaChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </Card>
-                  )}
-                </>
-              )}
+                {selectedEvent.status !== 'upcoming' && (
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.15 }}
+                    >
+                      <Card className="p-4 lg:p-5">
+                        <h4 className="text-xs lg:text-sm font-semibold text-gray-900 mb-3 lg:mb-4">Métriques clés</h4>
+                        {/* Seamless tile for metrics */}
+                        <div className="rounded-xl overflow-hidden">
+                          <div className="grid grid-cols-2 gap-px bg-gray-200">
+                            <motion.div
+                              className="p-2 lg:p-3 bg-gray-50"
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.2 }}
+                            >
+                              <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Fluidité</p>
+                              <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.globalFluidityScore}%</p>
+                            </motion.div>
+                            <motion.div
+                              className="p-2 lg:p-3 bg-gray-50"
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.25 }}
+                            >
+                              <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Attente</p>
+                              <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgWaitTime} min</p>
+                            </motion.div>
+                            <motion.div
+                              className="p-2 lg:p-3 bg-gray-50"
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.3 }}
+                            >
+                              <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Densité</p>
+                              <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgDensity}%</p>
+                            </motion.div>
+                            <motion.div
+                              className="p-2 lg:p-3 bg-gray-50"
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.35 }}
+                            >
+                              <p className="text-[10px] lg:text-xs text-gray-500 uppercase tracking-wide mb-1">Saturation</p>
+                              <p className="text-xl lg:text-2xl font-extralight text-gray-900">{selectedEvent.avgSaturation}%</p>
+                            </motion.div>
+                          </div>
+                        </div>
+                      </Card>
+                    </motion.div>
 
-              <Button variant="primary" className="w-full text-sm">
-                Voir le rapport complet
-              </Button>
-            </>
-          ) : (
-            <Card className="p-6 lg:p-8">
-              <div className="text-center">
-                <p className="text-xs lg:text-sm text-gray-500">Sélectionnez un événement</p>
-              </div>
-            </Card>
-          )}
+                    {selectedEvent.flowHistory.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                      >
+                        <Card className="p-4 lg:p-5 hidden lg:block">
+                          <h4 className="text-sm font-semibold text-gray-900 mb-4">Évolution du flux</h4>
+                          <div className="h-32">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <AreaChart data={selectedEvent.flowHistory}>
+                                <defs>
+                                  <linearGradient id="historyGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#111827" stopOpacity={0.2} />
+                                    <stop offset="100%" stopColor="#111827" stopOpacity={0} />
+                                  </linearGradient>
+                                </defs>
+                                <XAxis dataKey="time" hide />
+                                <YAxis hide />
+                                <Tooltip
+                                  contentStyle={{
+                                    backgroundColor: '#111827',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    color: 'white',
+                                    fontSize: '11px'
+                                  }}
+                                />
+                                <Area
+                                  type="monotone"
+                                  dataKey="value"
+                                  stroke="#111827"
+                                  strokeWidth={2}
+                                  fill="url(#historyGradient)"
+                                />
+                              </AreaChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </Card>
+                      </motion.div>
+                    )}
+                  </>
+                )}
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.45 }}
+                >
+                  <Button variant="primary" className="w-full text-sm">
+                    Voir le rapport complet
+                  </Button>
+                </motion.div>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              >
+                <Card className="p-6 lg:p-8">
+                  <div className="text-center">
+                    <p className="text-xs lg:text-sm text-gray-500">Sélectionnez un événement</p>
+                  </div>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
