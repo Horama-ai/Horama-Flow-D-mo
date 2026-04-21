@@ -7,11 +7,6 @@ import {
   YAxis,
   ResponsiveContainer,
   Tooltip,
-  RadarChart,
-  Radar,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
   CartesianGrid,
   Cell,
 } from 'recharts';
@@ -305,66 +300,64 @@ export function Compare({ events }: CompareProps) {
 
           {/* Charts Grid - Adaptive */}
           <div className={`grid grid-cols-1 ${getChartGridCols()} gap-4 lg:gap-6`}>
-            {/* Radar Chart */}
+            {/* Performance Metrics - Visual Cards */}
             <Card className="p-4 lg:p-6">
-              <div className="mb-4">
+              <div className="mb-5">
                 <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Performance globale</h3>
                 <p className="text-xs text-gray-500 mt-1">Comparaison multi-critères sur 5 axes (score 0-100)</p>
               </div>
-              <div className="h-64 lg:h-72">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={radarData}>
-                    <PolarGrid stroke="#e5e7eb" />
-                    <PolarAngleAxis
-                      dataKey="metric"
-                      tick={{ fontSize: 11, fill: '#374151' }}
-                    />
-                    <PolarRadiusAxis
-                      angle={90}
-                      domain={[0, 100]}
-                      tick={{ fontSize: 10, fill: '#6b7280' }}
-                    />
-                    {selected.map((_, idx) => (
-                      <Radar
-                        key={idx}
-                        name={selected[idx].name.substring(0, 12)}
-                        dataKey={`event${idx}`}
-                        stroke={eventColors[idx].main}
-                        fill={eventColors[idx].main}
-                        fillOpacity={0.15}
-                        strokeWidth={2}
-                      />
-                    ))}
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: '#111827',
-                        border: 'none',
-                        borderRadius: '8px',
-                        fontSize: '12px',
-                        padding: '12px',
-                      }}
-                      itemStyle={{ color: '#f9fafb' }}
-                      labelStyle={{ color: '#f9fafb', fontWeight: 'bold', marginBottom: '4px' }}
-                      formatter={(value, name) => {
-                        const eventIdx = parseInt(String(name).replace('event', ''));
-                        return [
-                          `${Number(value)}%`,
-                          selected[eventIdx]?.name.substring(0, 15) || ''
-                        ];
-                      }}
-                      labelFormatter={(label) => `${label} : ${metricDescriptions[label] || ''}`}
-                    />
-                  </RadarChart>
-                </ResponsiveContainer>
-              </div>
-              {/* Legend */}
-              <div className="flex flex-wrap justify-center gap-4 mt-4 pt-4 border-t border-gray-100">
+
+              {/* Legend at top */}
+              <div className="flex flex-wrap gap-4 mb-5 pb-4 border-b border-gray-100">
                 {selected.map((event, idx) => (
                   <div key={event.id} className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: eventColors[idx].main }} />
                     <span className="text-sm text-gray-700 font-medium">{event.name.substring(0, 15)}</span>
                   </div>
                 ))}
+              </div>
+
+              {/* Metric bars */}
+              <div className="space-y-5">
+                {radarData.map((metric) => {
+                  const metricData = metric as Record<string, string | number>;
+                  const maxValue = Math.max(...selected.map((_, idx) => (metricData[`event${idx}`] as number) || 0));
+                  return (
+                    <div key={metric.metric}>
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <span className="text-sm font-semibold text-gray-900">{metric.metric}</span>
+                          <p className="text-xs text-gray-500">{metricDescriptions[metric.metric]}</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {selected.map((event, idx) => {
+                          const value = (metricData[`event${idx}`] as number) || 0;
+                          const isMax = value === maxValue;
+                          return (
+                            <div key={event.id} className="flex items-center gap-3">
+                              <div className="w-20 lg:w-28 flex-shrink-0">
+                                <span className="text-xs text-gray-600 truncate block">{event.name.substring(0, 12)}</span>
+                              </div>
+                              <div className="flex-1 h-6 bg-gray-100 rounded-lg overflow-hidden relative">
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${value}%` }}
+                                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                                  className="h-full rounded-lg"
+                                  style={{ backgroundColor: eventColors[idx].main }}
+                                />
+                              </div>
+                              <div className={`w-12 text-right ${isMax ? 'text-emerald-600 font-bold' : 'text-gray-700 font-semibold'}`}>
+                                <span className="text-sm">{value}%</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </Card>
 
