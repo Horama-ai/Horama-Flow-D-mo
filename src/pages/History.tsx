@@ -153,53 +153,54 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
 
               {/* Calendar Grid */}
               <div className="grid grid-cols-7 gap-0.5 lg:gap-1">
-                {calendarData.map((day, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: idx * 0.01 }}
-                    className={`
-                      min-h-[48px] lg:min-h-[100px] p-1 lg:p-2 rounded-lg lg:rounded-xl border transition-colors
-                      ${day.date ? 'bg-white border-gray-200 hover:border-gray-400' : 'bg-gray-50 border-transparent'}
-                      ${isToday(day.date) ? 'border-gray-900 border-2' : ''}
-                    `}
-                  >
-                    {day.date && (
-                      <>
-                        <span className={`text-xs lg:text-sm font-medium ${isToday(day.date) ? 'text-gray-900' : 'text-gray-900'}`}>
-                          {day.date.getDate()}
-                        </span>
-                        <div className="mt-0.5 lg:mt-1 space-y-0.5 lg:space-y-1">
-                          {day.events.slice(0, 2).map(event => {
-                            const isSelected = event.id === selectedEventId;
-                            return (
-                              <button
-                                key={event.id}
-                                onClick={() => onSelectEvent(event.id)}
-                                className={`
-                                  w-full text-left px-1 lg:px-1.5 py-0.5 lg:py-1 text-[9px] lg:text-xs rounded-md truncate transition-all
-                                  ${isSelected
-                                    ? 'bg-gray-900 text-white font-medium'
-                                    : event.status === 'live'
-                                      ? 'bg-gray-200 text-gray-900 hover:bg-gray-300'
-                                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                  }
-                                `}
-                              >
-                                <span className="hidden lg:inline">{event.status === 'live' && '● '}{event.name}</span>
-                                <span className="lg:hidden">{event.status === 'live' ? '●' : '•'}</span>
-                              </button>
-                            );
-                          })}
-                          {day.events.length > 2 && (
-                            <span className="text-[9px] lg:text-xs text-gray-400 hidden lg:block">+{day.events.length - 2}</span>
-                          )}
-                        </div>
-                      </>
-                    )}
-                  </motion.div>
-                ))}
+                {calendarData.map((day, idx) => {
+                  const hasSelectedEvent = day.events.some(e => e.id === selectedEventId);
+                  return (
+                    <div
+                      key={idx}
+                      className={`
+                        min-h-[48px] lg:min-h-[100px] p-1 lg:p-2 rounded-lg lg:rounded-xl border transition-colors
+                        ${day.date ? 'bg-white border-gray-200 hover:border-gray-400' : 'bg-gray-50 border-transparent'}
+                        ${isToday(day.date) ? 'border-gray-900 border-2' : ''}
+                        ${hasSelectedEvent ? 'ring-2 ring-blue-500 ring-offset-1' : ''}
+                      `}
+                    >
+                      {day.date && (
+                        <>
+                          <span className={`text-xs lg:text-sm font-medium ${isToday(day.date) ? 'text-gray-900' : 'text-gray-900'}`}>
+                            {day.date.getDate()}
+                          </span>
+                          <div className="mt-0.5 lg:mt-1 space-y-0.5 lg:space-y-1">
+                            {day.events.slice(0, 2).map(event => {
+                              const isSelected = event.id === selectedEventId;
+                              return (
+                                <button
+                                  key={event.id}
+                                  onClick={() => onSelectEvent(event.id)}
+                                  className={`
+                                    w-full text-left px-1 lg:px-1.5 py-0.5 lg:py-1 text-[9px] lg:text-xs rounded-md truncate transition-all
+                                    ${isSelected
+                                      ? 'bg-gray-900 text-white font-medium'
+                                      : event.status === 'live'
+                                        ? 'bg-gray-200 text-gray-900 hover:bg-gray-300'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }
+                                  `}
+                                >
+                                  <span className="hidden lg:inline">{event.status === 'live' && '● '}{event.name}</span>
+                                  <span className="lg:hidden">{event.status === 'live' ? '●' : '•'}</span>
+                                </button>
+                              );
+                            })}
+                            {day.events.length > 2 && (
+                              <span className="text-[9px] lg:text-xs text-gray-400 hidden lg:block">+{day.events.length - 2}</span>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Legend */}
@@ -377,8 +378,8 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                               <AreaChart data={selectedEvent.flowHistory}>
                                 <defs>
                                   <linearGradient id="historyGradient" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor="#111827" stopOpacity={0.2} />
-                                    <stop offset="100%" stopColor="#111827" stopOpacity={0} />
+                                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.2} />
+                                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
                                   </linearGradient>
                                 </defs>
                                 <XAxis dataKey="time" hide />
@@ -395,7 +396,7 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                                 <Area
                                   type="monotone"
                                   dataKey="value"
-                                  stroke="#111827"
+                                  stroke="#3b82f6"
                                   strokeWidth={2}
                                   fill="url(#historyGradient)"
                                 />
