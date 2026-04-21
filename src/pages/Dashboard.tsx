@@ -1,7 +1,15 @@
 import { motion } from 'framer-motion';
-import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
 import type { Event } from '../data/events';
 import { Card, Badge, Button, LiveIndicator, StatusDot, Progress, AlertItem } from '../components/ui';
+
+// Objectifs pour chaque métrique
+const OBJECTIVES = {
+  waitTime: 10,      // minutes
+  passageTime: 3,    // minutes
+  density: 60,       // %
+  saturation: 65,    // %
+};
 
 interface DashboardProps {
   event: Event;
@@ -12,36 +20,19 @@ export function Dashboard({ event }: DashboardProps) {
   const warningZones = event.zones.filter(z => z.status === 'dense');
   const activeAlerts = event.alerts.filter(a => !a.acknowledged);
 
-  // Get trend for metrics
-  const getTrend = (history: { value: number }[]) => {
-    if (history.length < 2) return undefined;
-    const recent = history.slice(-4);
-    const older = history.slice(-8, -4);
-    if (older.length === 0) return undefined;
-    const recentAvg = recent.reduce((a, b) => a + b.value, 0) / recent.length;
-    const olderAvg = older.reduce((a, b) => a + b.value, 0) / older.length;
-    const change = ((recentAvg - olderAvg) / olderAvg) * 100;
-    return {
-      value: Math.abs(Math.round(change)),
-      direction: change > 2 ? 'up' : change < -2 ? 'down' : 'stable' as 'up' | 'down' | 'stable'
-    };
-  };
-
-  const waitTimeTrend = getTrend(event.waitTimeHistory);
-  const densityTrend = getTrend(event.densityHistory);
-  const saturationTrend = getTrend(event.saturationHistory);
-
   // Chart component for consistent styling
   const MetricChart = ({
     data,
     title,
     unit,
-    gradientId
+    gradientId,
+    objective
   }: {
     data: { time: string; value: number }[];
     title: string;
     unit: string;
     gradientId: string;
+    objective?: number;
   }) => (
     <Card className="overflow-hidden">
       <div className="px-4 lg:px-5 py-3 lg:py-4 border-b border-gray-100">
@@ -84,6 +75,21 @@ export function Dashboard({ event }: DashboardProps) {
                 }}
                 formatter={(value) => [`${value} ${unit}`, title]}
               />
+              {objective !== undefined && (
+                <ReferenceLine
+                  y={objective}
+                  stroke="#22c55e"
+                  strokeWidth={1.5}
+                  strokeDasharray="6 4"
+                  label={{
+                    value: `Obj: ${objective}${unit}`,
+                    position: 'right',
+                    fill: '#22c55e',
+                    fontSize: 9,
+                    fontWeight: 500
+                  }}
+                />
+              )}
               <Area
                 type="monotone"
                 dataKey="value"
@@ -143,18 +149,17 @@ export function Dashboard({ event }: DashboardProps) {
             <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
               {event.avgWaitTime}<span className="text-sm lg:text-lg text-gray-400 ml-1">min</span>
             </div>
-            {waitTimeTrend && (
-              <div className={`text-xs lg:text-sm font-medium mt-1 lg:mt-2 ${
-                waitTimeTrend.direction === 'down' ? 'text-emerald-500' : 'text-rose-400'
-              }`}>
-                {waitTimeTrend.direction === 'up' ? '↑' : '↓'} {waitTimeTrend.value}%
-              </div>
-            )}
+            <div className="text-xs lg:text-sm text-gray-400 mt-1 lg:mt-2">
+              Obj: {OBJECTIVES.waitTime} min
+            </div>
           </div>
           <div className="bg-white p-3 lg:p-8">
             <div className="text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 lg:mb-4">Temps passage</div>
             <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
               {event.avgPassageTime}<span className="text-sm lg:text-lg text-gray-400 ml-1">min</span>
+            </div>
+            <div className="text-xs lg:text-sm text-gray-400 mt-1 lg:mt-2">
+              Obj: {OBJECTIVES.passageTime} min
             </div>
           </div>
           <div className="bg-white p-3 lg:p-8">
@@ -162,26 +167,18 @@ export function Dashboard({ event }: DashboardProps) {
             <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
               {event.avgDensity}<span className="text-sm lg:text-lg text-gray-400 ml-1">%</span>
             </div>
-            {densityTrend && (
-              <div className={`text-xs lg:text-sm font-medium mt-1 lg:mt-2 ${
-                densityTrend.direction === 'down' ? 'text-emerald-500' : 'text-amber-500'
-              }`}>
-                {densityTrend.direction === 'up' ? '↑' : '↓'} {densityTrend.value}%
-              </div>
-            )}
+            <div className="text-xs lg:text-sm text-gray-400 mt-1 lg:mt-2">
+              Obj: {OBJECTIVES.density}%
+            </div>
           </div>
           <div className="bg-white p-3 lg:p-8 col-span-2 lg:col-span-1">
             <div className="text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 lg:mb-4">Saturation</div>
             <div className="text-2xl lg:text-5xl font-extralight text-gray-900 tabular-nums">
               {event.avgSaturation}<span className="text-sm lg:text-lg text-gray-400 ml-1">%</span>
             </div>
-            {saturationTrend && (
-              <div className={`text-xs lg:text-sm font-medium mt-1 lg:mt-2 ${
-                saturationTrend.direction === 'down' ? 'text-emerald-500' : 'text-rose-400'
-              }`}>
-                {saturationTrend.direction === 'up' ? '↑' : '↓'} {saturationTrend.value}%
-              </div>
-            )}
+            <div className="text-xs lg:text-sm text-gray-400 mt-1 lg:mt-2">
+              Obj: {OBJECTIVES.saturation}%
+            </div>
           </div>
         </motion.div>
 
@@ -197,24 +194,28 @@ export function Dashboard({ event }: DashboardProps) {
             title="Temps d'attente estimé"
             unit="min"
             gradientId="waitTimeGradient"
+            objective={OBJECTIVES.waitTime}
           />
           <MetricChart
             data={event.flowHistory.map(p => ({ time: p.time, value: Math.round(p.value / 100) }))}
             title="Temps de passage"
             unit="min"
             gradientId="passageTimeGradient"
+            objective={OBJECTIVES.passageTime}
           />
           <MetricChart
             data={event.densityHistory}
             title="Densité"
             unit="%"
             gradientId="densityGradient"
+            objective={OBJECTIVES.density}
           />
           <MetricChart
             data={event.saturationHistory}
             title="Saturation / Congestion"
             unit="%"
             gradientId="saturationGradient"
+            objective={OBJECTIVES.saturation}
           />
         </motion.div>
 
