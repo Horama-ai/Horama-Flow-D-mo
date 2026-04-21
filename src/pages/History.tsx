@@ -271,12 +271,6 @@ export function History({ events, selectedEventId, onSelectEvent }: HistoryProps
                 <Card className="p-4 lg:p-5">
                   <div>
                     <div className="flex items-center gap-2 mb-2 lg:mb-3">
-                      {selectedEvent.status === 'live' && (
-                        <span className="flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-gray-500 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-900" />
-                        </span>
-                      )}
                       <Badge variant={selectedEvent.status === 'live' ? 'danger' : selectedEvent.status === 'upcoming' ? 'yellow' : 'success'}>
                         {selectedEvent.status === 'live' ? 'En direct' : selectedEvent.status === 'upcoming' ? 'À venir' : 'Terminé'}
                       </Badge>
