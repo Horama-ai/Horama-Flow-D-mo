@@ -328,15 +328,24 @@ interface BadgeProps {
 }
 
 export function Badge({ children, variant = 'default', size = 'md', className = '' }: BadgeProps) {
-  // Neutral gray background with subtle colored dot
+  const variantStyles = {
+    default: 'bg-gray-100 text-gray-700',
+    success: 'bg-emerald-50 text-emerald-700',
+    warning: 'bg-amber-50 text-amber-700',
+    danger: 'bg-rose-50 text-rose-700',
+    blue: 'bg-gray-100 text-gray-700',
+    red: 'bg-rose-50 text-rose-700',
+    yellow: 'bg-amber-50 text-amber-700'
+  };
+
   const dotColors = {
     default: 'bg-gray-400',
-    success: 'bg-emerald-400',
-    warning: 'bg-amber-400',
-    danger: 'bg-rose-400',
+    success: 'bg-emerald-500',
+    warning: 'bg-amber-500',
+    danger: 'bg-rose-500',
     blue: 'bg-gray-700',
-    red: 'bg-rose-400',
-    yellow: 'bg-amber-400'
+    red: 'bg-rose-500',
+    yellow: 'bg-amber-500'
   };
 
   const sizes = {
@@ -345,7 +354,7 @@ export function Badge({ children, variant = 'default', size = 'md', className = 
   };
 
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full font-medium bg-gray-100 text-gray-700 ${sizes[size]} ${className}`}>
+    <span className={`inline-flex items-center gap-1.5 rounded-full font-medium ${variantStyles[variant]} ${sizes[size]} ${className}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${dotColors[variant]}`} />
       {children}
     </span>
